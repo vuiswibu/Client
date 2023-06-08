@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
@@ -16,7 +18,6 @@ public class MainMenuFrm extends javax.swing.JFrame {
     private Vector<Integer> listIDRoom;
     private Vector<String> listNPlayer;
     private Thread thread;
-    private boolean isFinded;
     private boolean isPlayThread;
     DefaultTableModel defaultTableModel;
 
@@ -28,7 +29,6 @@ public class MainMenuFrm extends javax.swing.JFrame {
         findingpan.setVisible(false);
         acceptpan.setVisible(false);
         defaultTableModel = (DefaultTableModel) jTable1.getModel();
-
         isPlayThread = true;
         thread = new Thread(){
             @Override
@@ -171,9 +171,9 @@ public class MainMenuFrm extends javax.swing.JFrame {
         swiftplay_btt.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         swiftplay_btt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icons8_circled_play_24px.png"))); // NOI18N
         swiftplay_btt.setText("Swift play");
-        swiftplay_btt.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                swiftplay_bttMouseClicked(evt);
+        swiftplay_btt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                swiftplay_bttActionPerformed(evt);
             }
         });
 
@@ -255,11 +255,16 @@ public class MainMenuFrm extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("Found opponent. Accept ?");
+        jLabel2.setText("Found room u can use :D. Accept ?");
 
         jButton1.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icons8_cancel_24px.png"))); // NOI18N
         jButton1.setText("Cancel");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icons8_ok_24px.png"))); // NOI18N
@@ -420,12 +425,6 @@ public class MainMenuFrm extends javax.swing.JFrame {
         RunClient.openView(RunClient.View.RANK);
     }//GEN-LAST:event_rank_bttMouseClicked
 
-    private void swiftplay_bttMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_swiftplay_bttMouseClicked
-        findingpan.setVisible(true);
-        startFind();
-        sendFindRequest();
-    }//GEN-LAST:event_swiftplay_bttMouseClicked
-
     private void frlist_bttMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_frlist_bttMouseClicked
         RunClient.openView(RunClient.View.FRIENDLIST);
     }//GEN-LAST:event_frlist_bttMouseClicked
@@ -435,8 +434,6 @@ public class MainMenuFrm extends javax.swing.JFrame {
     }//GEN-LAST:event_profile_bttActionPerformed
 
     private void cancel_bttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancel_bttActionPerformed
-        if(isFinded)
-            return;
         try {
             RunClient.socketHandle.write("cancel-room,");
         } catch (IOException ex) {
@@ -466,10 +463,12 @@ public class MainMenuFrm extends javax.swing.JFrame {
 //            }
 //        }
     }//GEN-LAST:event_jTable1MouseClicked
-
+    
+    //xử lý chấp nhận vào phòng
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try {
             RunClient.socketHandle.write("accept-room,");
+            timer.stop();
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(rootPane, ex.getMessage());
         }
@@ -488,6 +487,31 @@ public class MainMenuFrm extends javax.swing.JFrame {
             }
         } 
     }//GEN-LAST:event_createroom_bttActionPerformed
+
+    private void swiftplay_bttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_swiftplay_bttActionPerformed
+        findingpan.setVisible(true);
+        if(timer!=null){
+            timer.stop();
+        }
+        //phòng trường hợp nếu nhấn lại swiftplay 1 lần nữa thì nó sẽ tắt cái cũ
+        acceptpan.setVisible(false);
+        sendFindRequest();
+    }//GEN-LAST:event_swiftplay_bttActionPerformed
+    
+    public void setAllVisibleFalse(){
+        acceptpan.setVisible(false);
+        findingpan.setVisible(false);
+    }
+    //xử lý hủy chấp nhận phòng
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        try {
+            RunClient.socketHandle.write("cancel-room,");
+            timer.stop();
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+        }
+        acceptpan.setVisible(false);
+    }//GEN-LAST:event_jButton1ActionPerformed
     
     public void sendFindRequest(){
         try {
@@ -496,33 +520,12 @@ public class MainMenuFrm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, ex.getMessage());
         }
     }
-   public void startFind(){
-        timer = new Timer(1000, new ActionListener() {
-            int count = 5;
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                count--;
-                if (count < 0) {
-                    ((Timer) (e.getSource())).stop();
-                    try {
-                        RunClient.socketHandle.write("cancel-room,");
-                    } catch (IOException ex) {
-                        JOptionPane.showMessageDialog(rootPane, ex.getMessage());
-                    }
-                    int res = JOptionPane.showConfirmDialog(rootPane, "Tìm kiếm thất bại, bạn muốn thử lại lần nữa chứ?");
-                    if (res==JOptionPane.YES_OPTION){
-                        startFind();
-                        sendFindRequest();
-                    }
-                }
-            }
-        });
-        timer.setInitialDelay(0);
-        timer.start();
-    }
     public void showFindedRoom(){
-        isFinded = true;
-        timer.stop();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            JOptionPane.showMessageDialog(rootPane, "Lỗi khi sleep thread");
+        }
         findingpan.setVisible(false);
         acceptpan.setVisible(true);
         startCount();
@@ -531,17 +534,14 @@ public class MainMenuFrm extends javax.swing.JFrame {
         timer.stop();
     }
     public void startCount(){
-        timer1 = new Timer(1000, new ActionListener() {
-            int count = 20;
+        timer = new Timer(1000, new ActionListener() {
+            int count = 15;
 
             @Override
             public void actionPerformed(ActionEvent e) {
                 count--;
                 if (count >= 0) {
-                    if(count>=10)
-                        lbTimerPairMatch.setText("00:" + count);
-                    else
-                        lbTimerPairMatch.setText("00:0" + count);
+                   lbTimerPairMatch.setText(count+"s");
                 } else {
                     ((Timer) (e.getSource())).stop();
                     try {
@@ -553,7 +553,6 @@ public class MainMenuFrm extends javax.swing.JFrame {
                     if (res==JOptionPane.YES_OPTION){
                         findingpan.setVisible(true);
                         acceptpan.setVisible(false);
-                        startFind();
                         sendFindRequest();
                     }
                     else{
@@ -564,8 +563,8 @@ public class MainMenuFrm extends javax.swing.JFrame {
                 }
             }
         });
-        timer1.setInitialDelay(0);
-        timer1.start();
+        timer.setInitialDelay(0);
+        timer.start();
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -14,8 +14,6 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import model.User;
 import view.WaitingFrm;
@@ -52,7 +50,6 @@ public class SocketHandler implements Runnable{
                 if(messageSplit[0].equals("server-send-id")){
                     ID_Server = Integer.parseInt(messageSplit[1]);
                     System.out.println(messageSplit[1]);
-                    RunClient.loginFrm.log(String.valueOf(ID_Server));
                 }
                 if(messageSplit[0].equals("login-success")){
                     System.out.println("Đăng nhập thành công");
@@ -117,11 +114,46 @@ public class SocketHandler implements Runnable{
                 //Tạo phòng và server trả về tên phòng
                 if(messageSplit[0].equals("your-created-room")){
                     RunClient.closeAllViews();
-                                        System.out.println("cc");
                     RunClient.openView(RunClient.View.CHILLROOM);
                     RunClient.chillFrm.setRoomName(messageSplit[1]);
                     if(messageSplit.length==3)
                         RunClient.chillFrm.setRoomPassword("Mật khẩu phòng: "+messageSplit[2]);
+                }
+                 if(messageSplit[0].equals("go-to-room")){
+                    System.out.println("Vào phòng");
+                    int roomID = Integer.parseInt(messageSplit[1]);
+                    int isStart = Integer.parseInt(messageSplit[2]);
+                    System.out.println("test");
+                    User competitor = getUserFromString(3, messageSplit);
+                    if(RunClient.chillFrm!=null){
+                        RunClient.chillFrm.showFindedCompetitor();
+                        
+                        try {
+                            Thread.sleep(3000);
+                        } catch (InterruptedException ex) {
+                            JOptionPane.showMessageDialog(RunClient.chillFrm, "Lỗi khi sleep thread");
+                        }
+                    }
+                    else{
+                        RunClient.mainmenuFrm.setAllVisibleFalse();
+                        try {
+                            Thread.sleep(3000);
+                        } catch (InterruptedException ex) {
+                            JOptionPane.showMessageDialog(RunClient.mainmenuFrm, "Lỗi khi sleep thread");
+                        }
+                    }
+                    RunClient.closeAllViews();
+                    System.out.println("Đã vào phòng: "+roomID);
+                    //Xử lý vào phòng
+                    RunClient.openView(RunClient.View.GAMECLIENT
+                            , competitor
+                            , roomID
+                            ,isStart
+                            );
+                    //RunClient.gameClientFrm.newgame();
+                }
+                if(messageSplit[0].equals("Found-room")){
+                     RunClient.mainmenuFrm.showFindedRoom();
                 }
                 if(messageSplit[0].equals("left-room")){
                     //RunClient.gameClientFrm.stopTimer();
@@ -147,7 +179,7 @@ public class SocketHandler implements Runnable{
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException ex) {
-            Logger.getLogger(SocketHandler.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
     }
     public User getUserFromString(int start, String[] message){

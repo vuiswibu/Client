@@ -11,6 +11,7 @@ import view.ProfileFrm;
 import view.FriendFrm;
 import view.CreateRoomPasswordFrm;
 import view.ChillFrm;
+import view.InGameFrm;
 
 public class RunClient {
     public enum View{
@@ -20,7 +21,6 @@ public class RunClient {
         ROOMLIST,
         FRIENDLIST,
         FINDROOM,
-        WAITINGROOM,
         GAMECLIENT,
         CREATEROOMPASSWORD,
         JOINROOMPASSWORD,
@@ -44,7 +44,7 @@ public class RunClient {
     public static FriendFrm friendFrm;
     public static ChillFrm chillFrm;
     public static WaitingFrm waitingFrm;
-//    public static GameClientFrm gameClientFrm;
+    public static InGameFrm ingameFrm;
     public static CreateRoomPasswordFrm createRoomPasswordFrm;
 //    public static JoinRoomPasswordFrm joinRoomPasswordFrm;
 //    public static CompetitorInfoFrm competitorInfoFrm;
@@ -94,7 +94,7 @@ public class RunClient {
                     chillFrm = new ChillFrm();
                     chillFrm.setVisible(true);
                     break;
-                case WAITINGROOM:
+                case WAITINGVERIFY:
                     waitingFrm = new WaitingFrm();
                     waitingFrm.setVisible(true);
                     break;                
@@ -117,12 +117,22 @@ public class RunClient {
         if(viewName != null){
             switch(viewName){
                 case WAITINGVERIFY:
-                    WaitingFrm waitingfrm = new WaitingFrm(arg1, arg2);
-                    waitingfrm.setVisible(true);
+                    waitingFrm = new WaitingFrm(arg1, arg2);
+                    waitingFrm.setVisible(true);
                     break;
                 case LOGIN:
                     loginFrm = new LoginFrm(arg1, arg2);
                     loginFrm.setVisible(true);
+            }
+        }
+    }
+    public static void openView(View viewName, User competitor, int room_ID, int isStart){
+        if(viewName != null){
+            switch(viewName){
+                case GAMECLIENT:
+                    ingameFrm = new InGameFrm(competitor, room_ID, isStart);
+                    ingameFrm.setVisible(true);
+                    break;
             }
         }
     }
