@@ -5,15 +5,19 @@
  */
 package view;
 import controller.RunClient;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.Transparency;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import model.User;
 
@@ -29,6 +33,20 @@ public class RankFrm extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         tableModel = (DefaultTableModel) jTable1.getModel();
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+        jTable1.setDefaultRenderer(String.class, centerRenderer);
+        rankSrc = new ArrayList<>();
+        rankSrc.add("radiant");
+        rankSrc.add("immortal");
+        rankSrc.add("ascendant");
+        rankSrc.add("diamond");
+        rankSrc.add("platinum");
+        rankSrc.add("gold");
+        rankSrc.add("silver");
+        rankSrc.add("bronze");
+        rankSrc.add("iron");
+        rankSrc.add("trash");
         try {
             RunClient.socketHandle.write("get-rank-charts,");
         } catch (IOException ex) {
@@ -39,12 +57,14 @@ public class RankFrm extends javax.swing.JFrame {
         this.listUserStatics = users;
         tableModel.setRowCount(0);
         int i=0;
-        for(User user : listUserStatics){
+        for (User user : listUserStatics) {
             tableModel.addRow(new Object[]{
-                i+1,
-                user.getRank()
+                i + 1,
+                user.getNickname(),
+                //scaledIcon, 
+                new ImageIcon(new ImageIcon("src/assets/rank/"+rankSrc.get(i)+".png").getImage().getScaledInstance(70, 70,Image.SCALE_SMOOTH)),
             });
-        i++;
+            i++;
         }
     }
     @SuppressWarnings("unchecked")
@@ -56,7 +76,7 @@ public class RankFrm extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         Object[][] rows = {
         };
-        String[] columns = {"Rank","Nickname","Điểm"};
+        String[] columns = {"","",""};
         DefaultTableModel model = new DefaultTableModel(rows, columns){
             @Override
             public Class<?> getColumnClass(int column){
@@ -66,6 +86,11 @@ public class RankFrm extends javax.swing.JFrame {
                     case 2: return ImageIcon.class;
                     default: return Object.class;
                 }
+            }
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                //all cells false
+                return false;
             }
         };
         jTable1 = new javax.swing.JTable();
@@ -78,7 +103,7 @@ public class RankFrm extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Bảng xếp hạng");
+        jLabel1.setText("Rank");
 
         jTable1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jTable1.setModel(model);
@@ -135,7 +160,6 @@ public class RankFrm extends javax.swing.JFrame {
         }
         //RunClient.openView(RunClient.View.COMPETITORINFO,listUserStatics.get(jTable1.getSelectedRow()));
     }//GEN-LAST:event_jTable1MouseClicked
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;

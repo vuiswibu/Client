@@ -163,6 +163,9 @@ public class InGameFrm extends javax.swing.JFrame {
         RunClient.closeAllViews();
         RunClient.openView(RunClient.View.HOME);
     }
+    public void stopAllThread(){
+        timer.stop();
+    }
     void setupButton() {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {

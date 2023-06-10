@@ -8,8 +8,10 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 public class MainMenuFrm extends javax.swing.JFrame {
@@ -31,6 +33,10 @@ public class MainMenuFrm extends javax.swing.JFrame {
         findingpan.setVisible(false);
         acceptpan.setVisible(false);
         defaultTableModel = (DefaultTableModel) jTable1.getModel();
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+        jTable1.setDefaultRenderer(String.class, centerRenderer);
+        jTable1.setDefaultRenderer(Integer.class, centerRenderer);
         isPlayThread = true;
         isFinded=false;
         thread = new Thread(){
@@ -146,6 +152,11 @@ public class MainMenuFrm extends javax.swing.JFrame {
         rank_btt.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 rank_bttMouseClicked(evt);
+            }
+        });
+        rank_btt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rank_bttActionPerformed(evt);
             }
         });
 
@@ -491,7 +502,7 @@ public class MainMenuFrm extends javax.swing.JFrame {
         if(isFinded)
             return;
         findingpan.setVisible(true);
-        if(timer!=null){
+        if(timer!=null && timer.isRunning()){
             timer.stop();
         }
         //phòng trường hợp nếu nhấn lại swiftplay 1 lần nữa thì nó sẽ tắt cái cũ
@@ -528,6 +539,10 @@ public class MainMenuFrm extends javax.swing.JFrame {
         RunClient.closeView(RunClient.View.HOME);
         RunClient.openView(RunClient.View.LOGIN);      
     }//GEN-LAST:event_logout_bttActionPerformed
+
+    private void rank_bttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rank_bttActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rank_bttActionPerformed
     
     public void sendFindRequest(){
         try {
@@ -548,6 +563,7 @@ public class MainMenuFrm extends javax.swing.JFrame {
     }
     public void stopAllThread(){
         timer.stop();
+        isPlayThread=false;
     }
     public void startCount(){
         timer = new Timer(1000, new ActionListener() {
@@ -555,7 +571,6 @@ public class MainMenuFrm extends javax.swing.JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                count--;
                 if (count >= 0) {
                    lbTimerPairMatch.setText(count+"s");
                 } else {
@@ -576,6 +591,7 @@ public class MainMenuFrm extends javax.swing.JFrame {
                         findingpan.setVisible(false);
                         acceptpan.setVisible(false);
                     }
+                    count--;
                 }
             }
         });

@@ -8,6 +8,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import java.sql.SQLException;
 import controller.RunClient;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Rectangle;
 
 public class RegisterUserFrm extends javax.swing.JFrame {
     public RegisterUserFrm() {
@@ -15,9 +18,8 @@ public class RegisterUserFrm extends javax.swing.JFrame {
         this.setIconImage(new ImageIcon("src/assets/logoicon.png").getImage());
         this.setResizable(false);
         this.setLocationRelativeTo(null);
-        avatarComboBox1.setMaximumRowCount(5);
-        for (int i=0; i<=5; i++) {
-            avatarComboBox1.addItem(new ImageIcon("assets/avatar/"+i+".jpg"));
+        for (int i=1; i<=22; i++) {
+            avatarComboBox1.addItem(new ImageIcon(new ImageIcon("src/assets/avatar/"+i+".png").getImage().getScaledInstance(avatarComboBox1.getWidth(), avatarComboBox1.getHeight(),Image.SCALE_SMOOTH)));
         }
     }
     @SuppressWarnings("unchecked")
@@ -33,7 +35,30 @@ public class RegisterUserFrm extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jPasswordField1 = new javax.swing.JPasswordField();
         jLabel6 = new javax.swing.JLabel();
-        avatarComboBox1 = new javax.swing.JComboBox<>();
+        avatarComboBox1 = new javax.swing.JComboBox<>() {
+            @Override
+            public void paint(Graphics g) {
+                Rectangle bounds = getBounds();
+                Object selectedItem = getSelectedItem();
+
+                // Vẽ lại giao diện người dùng của JComboBox mà không bao gồm thanh cuộn
+                g.setColor(getBackground());
+                g.fillRect(0, 0, bounds.width, bounds.height);
+
+                if (selectedItem instanceof ImageIcon) {
+                    // Nếu mục đã chọn là một ImageIcon, hiển thị hình ảnh
+                    ImageIcon imageIcon = (ImageIcon) selectedItem;
+                    Image image = imageIcon.getImage();
+                    int x = 3; // Vị trí x để vẽ hình ảnh
+                    int y = (bounds.height - imageIcon.getIconHeight()) / 2; // Vị trí y để căn giữa hình ảnh
+                    g.drawImage(image, x, y, null);
+                } else {
+                    // Nếu không, hiển thị văn bản đã chọn
+                    g.setColor(getForeground());
+                    g.drawString(selectedItem.toString(), 3, bounds.height - 4);
+                }
+            }
+        };
         jButton1 = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
 
@@ -73,6 +98,8 @@ public class RegisterUserFrm extends javax.swing.JFrame {
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel6.setText("Set Avatar");
+
+        avatarComboBox1.setMaximumRowCount(25);
 
         jButton1.setText("Đăng kí");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -182,7 +209,7 @@ public class RegisterUserFrm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, ex.getMessage());
         }
     }//GEN-LAST:event_jButton1ActionPerformed
-
+ 
     private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
         RunClient.closeView(RunClient.View.REGISTER);
         RunClient.openView(RunClient.View.LOGIN);
@@ -203,4 +230,5 @@ public class RegisterUserFrm extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
+
 }
