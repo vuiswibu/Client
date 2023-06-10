@@ -124,7 +124,6 @@ public class SocketHandler implements Runnable{
                     System.out.println("Vào phòng");
                     int roomID = Integer.parseInt(messageSplit[1]);
                     int isStart = Integer.parseInt(messageSplit[2]);
-                    System.out.println("test");
                     User competitor = getUserFromString(3, messageSplit);
                     if(RunClient.chillFrm!=null){
                         RunClient.chillFrm.showFindedCompetitor();
@@ -172,6 +171,17 @@ public class SocketHandler implements Runnable{
                     RunClient.ingameFrm.numberOfMatch++;
                     RunClient.ingameFrm.newgame();
                 }
+                //Xử lý đánh một nước trong ván chơi
+                if(messageSplit[0].equals("caro")){
+                    RunClient.ingameFrm.addCompetitorMove(messageSplit[1], messageSplit[2]);
+                }
+                if(messageSplit[0].equals("chat")){
+                    RunClient.ingameFrm.addMessage(messageSplit[1]);
+                }
+//                if(messageSplit[0].equals("draw-request")){
+//                    RunClient.ingameFrm.showDrawRequest();
+//                }
+                
                 if(messageSplit[0].equals("banned-notice")){
                     RunClient.socketHandle.write("offline,"+RunClient.user.getID());
                     RunClient.closeAllViews();

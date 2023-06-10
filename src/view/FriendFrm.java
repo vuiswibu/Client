@@ -192,7 +192,7 @@ public class FriendFrm extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         RunClient.closeView(RunClient.View.FRIENDLIST);
-        RunClient.openView(RunClient.View.HOME);
+        //RunClient.openView(RunClient.View.HOME);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked

@@ -4,6 +4,7 @@
  */
 package controller;
 
+import model.User;
 import view.InGameFrm;
 
 /**
@@ -12,7 +13,8 @@ import view.InGameFrm;
  */
 public class TestFrm {
     public static void main(String[] args) {
-//        InGameFrm ingame = new InGameFrm(100,1);
-//        ingame.setVisible(true);
+        User user = new User(1,"cac","cac","cac","cac",1,12,12,1);
+        InGameFrm ingame = new InGameFrm(user,100,1);
+        ingame.setVisible(true);
     }
 }

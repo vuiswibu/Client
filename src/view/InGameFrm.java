@@ -10,7 +10,11 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -40,6 +44,7 @@ public class InGameFrm extends javax.swing.JFrame {
     private String winItem[];
     private String preItem[];
     
+    private JButton preButton;
     private int userWin;
     private int competitorWin;
     
@@ -49,12 +54,12 @@ public class InGameFrm extends javax.swing.JFrame {
      */
     public InGameFrm(User competitor,int room_ID, int isStart) {
         initComponents();
-        try {
-            //UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (Exception e) {
-
-        }
+//        try {
+//            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+//            //UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+//        } catch (Exception e) {
+//
+//        }
         this.competitor = competitor;
         numberOfMatch = isStart;
         System.out.println(numberOfMatch);
@@ -89,22 +94,19 @@ public class InGameFrm extends javax.swing.JFrame {
                     ((Timer) (e.getSource())).stop();
                     second = 0; // check lại xem có nên bỏ không?
                     minute = 1;
-                    if (LabTextTurn.equals("My Turn")) {
-                        try {
-                            RunClient.openView(RunClient.View.WAITINGVERIFY, "Bạn đã thua do quá thời gian", "Đang thiết lập ván chơi mới");
-                            increaseWinMatchToCompetitor();
-                            RunClient.socketHandle.write("lose,");
-                        } catch (IOException ex) {
-                            JOptionPane.showMessageDialog(rootPane, ex.getMessage());
-                        }
-                    } 
-                }else if(minute>0 && second==0){
-                    second=59;
+                    try {
+                        RunClient.openView(RunClient.View.WAITINGVERIFY, "Bạn đã thua do quá thời gian", "Đang thiết lập ván chơi mới");
+                        increaseWinMatchToCompetitor();
+                        RunClient.socketHandle.write("lose,");
+                    } catch (IOException ex) {
+                        JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+                    }
+                } else if (minute > 0 && second == 0) {
+                    second = 59;
                     minute--;
-                }else{
+                } else {
                     second--;
                 }
-
             }
 
         });
@@ -125,7 +127,7 @@ public class InGameFrm extends javax.swing.JFrame {
 //        iconItem[0] = "assets/image/x3.jpg";
         preItem = new String[2];
         preItem[1] = "src/assets/preOicon1.png";
-        preItem[0] = "src/assets/preXicon1.jpg";
+        preItem[0] = "src/assets/preXicon1.png";
         
         this.getContentPane().setLayout(null);
         PanelBanco.setLayout(new GridLayout(size, size));
@@ -134,14 +136,32 @@ public class InGameFrm extends javax.swing.JFrame {
             for (int j = 0; j < size; j++) {
                 button[i][j] = new JButton("");
                 button[i][j].setBackground(Color.WHITE);
-                //button[i][j].setDisabledIcon(new ImageIcon("src/assets/new.png"));
-                //button[i][j].setIcon(new ImageIcon("assets/image/blank.jpg"));
+//                button[i][j].setDisabledIcon(new ImageIcon("src/assets/new.png"));
+//                button[i][j].setIcon(new ImageIcon("src/assets/new.png"));
                 PanelBanco.add(button[i][j]);
             }
         }
         setupButton();
         setEnableButton(true);
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                exitGame();
+            }
+        });
 
+    }
+    public void exitGame() {
+        try {
+            timer.stop();
+            RunClient.socketHandle.write("left-room,");
+            RunClient.closeAllViews();
+            RunClient.openView(RunClient.View.HOME);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+        }
+        RunClient.closeAllViews();
+        RunClient.openView(RunClient.View.HOME);
     }
     void setupButton() {
         for (int i = 0; i < size; i++) {
@@ -152,11 +172,28 @@ public class InGameFrm extends javax.swing.JFrame {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         try {
-                            //button[a][b].setIcon(new ImageIcon("src/assets/o.png"));
+                            //button[a][b].setIcon(new ImageIcon(normalItem[(numberOfMatch % 2)]));
                             button[a][b].setDisabledIcon(new ImageIcon(normalItem[(numberOfMatch % 2)]));
                             matrix[a][b] = 1;
                             userMatrix[a][b] = 1;
                             button[a][b].setEnabled(false);
+                            try {
+                                if (checkHangU() == 1 || checkCotU() == 1 || checkCheoTraiU() == 1 || checkCheoPhaiU() == 1) {
+                                    //Xử lý khi người chơi này thắng
+                                    increaseWinMatchToUser();
+                                    RunClient.socketHandle.write("win,"+a+","+b);
+                                    RunClient.openView(RunClient.View.CHILLROOM,"Bạn đã thắng","Đang thiết lập ván chơi mới");
+
+                                }
+                                else{
+                                    RunClient.socketHandle.write("caro," + a + "," + b);
+                                    displayCompetitorTurn();
+                                    
+                                }
+                                timer.stop();
+                            } catch (Exception ie) {
+                                ie.printStackTrace();
+                            }
                             setEnableButton(false);
 
                         }
@@ -188,24 +225,22 @@ public class InGameFrm extends javax.swing.JFrame {
         
         if (numberOfMatch % 2 == 0) {
             JOptionPane.showMessageDialog(rootPane, "Đến lượt bạn đi trước");
-            startTimer();
             displayUserTurn();
-            //timerjLabel19.setVisible(true);
+            startTimer();
         } else {
             JOptionPane.showMessageDialog(rootPane, "Đối thủ đi trước");
             displayCompetitorTurn();
         }
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                button[i][j].setIcon(new ImageIcon("assets/image/blank.jpg"));
-                button[i][j].setDisabledIcon(new ImageIcon("assets/image/border.jpg"));
+                button[i][j].setIcon(new ImageIcon("src/assets/new.png"));
+                button[i][j].setDisabledIcon(new ImageIcon("src/assets/new.png"));
                 button[i][j].setText("");
                 competitorMatrix[i][j] = 0;
                 matrix[i][j] = 0;
                 userMatrix[i][j] = 0;
             }
         }
-       
         //IF Enemy Turn 
         if(numberOfMatch % 2 != 0){
             setEnableButton(false);
@@ -213,10 +248,9 @@ public class InGameFrm extends javax.swing.JFrame {
         else{
             setEnableButton(true);
         }
-        
         IconUser.setIcon(new ImageIcon(normalItem[numberOfMatch % 2]));
         IconCompetitor.setIcon(new ImageIcon(normalItem[not(numberOfMatch % 2)]));
-        //preButton = null;
+        preButton = null;
     }
     public void startTimer(){
         second = 0;
@@ -225,6 +259,7 @@ public class InGameFrm extends javax.swing.JFrame {
     }
     public void displayUserTurn(){
         LabTextTurn.setText("My Turn");
+        LabelTimer.setVisible(true);
         jButton3.setVisible(true);
         if(numberOfMatch % 2==0){
             LabTextTurn.setForeground(Color.RED);
@@ -236,6 +271,7 @@ public class InGameFrm extends javax.swing.JFrame {
     }
     public void displayCompetitorTurn() {
         LabTextTurn.setText("Enemy Turn");
+        LabelTimer.setVisible(false);
         jButton3.setVisible(false);
         if(not(numberOfMatch % 2)==0){
             LabTextTurn.setForeground(Color.RED);
@@ -244,6 +280,12 @@ public class InGameFrm extends javax.swing.JFrame {
             LabTextTurn.setForeground(Color.GREEN);
         }
         LabIconTurn.setIcon(new ImageIcon(normalItem[not(numberOfMatch % 2)]));
+    }
+    public void addMessage(String message){
+        String temp = jTextArea1.getText();
+        temp += competitor.getNickname() + ": " + message+"\n";
+        jTextArea1.setText(temp);
+        jTextArea1.setCaretPosition(jTextArea1.getDocument().getLength());
     }
     public void setEnableButton(boolean b) {
         for (int i = 0; i < size; i++) {
@@ -283,58 +325,84 @@ public class InGameFrm extends javax.swing.JFrame {
     }
     // check competitor
     public int checkHang() {
-        int hang = 0, n = 0, k = 0;
+        int hang = 0;
+        List<JButton> list = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 if (competitorMatrix[i][j] == 1) {
+                    list.add(button[i][j]);
                     hang++;
+                    if (hang >= 5){
+                       for (JButton jButton : list) {
+                           jButton.setDisabledIcon(new ImageIcon(winItem[numberOfMatch % 2]));
+                       }
+                       return 1;
+                    }   
                 } else {
                     hang = 0;
+                    list = new ArrayList<>();
                 }
-                if (hang >= 5)
-                    return 1;
             }
             hang = 0;
+            list = new ArrayList<>();
         }
         return 0;
     }
 
     public int checkCot() {
-        int cot = 0, n = 0, k = 0;
+        int cot = 0;
+        List<JButton> list = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 if (competitorMatrix[j][i] == 1) {
+                    list.add(button[i][j]);
                     cot++;
-                } else {
+                    if (cot >= 5){
+                        for (JButton jButton : list) {
+                            jButton.setDisabledIcon(new ImageIcon(winItem[numberOfMatch % 2]));
+                        }
+                        return 1;
+                    }
+                } else {                   
                     cot = 0;
-                }
-                if (cot >= 5)
-                    return 1;
+                    list = new ArrayList<>();
+                }                                 
             }
             cot = 0;
+            list = new ArrayList<>();
         }
         return 0;
     }
 
-    public int checkCheoPhai() {
+    public int checkCheoTrai() {
+        //vẫn độ phức tạp là n^2 cách này là chia ra 2 nửa mà check
         /*xx... chéo từ trái qua phải từ trên qua phải
           .xx..
           ..ox.
           ...xx
           ....x*/
         int j = 0;
+        List<JButton> list = new ArrayList<>();
         while (j < size) {
             int demx = 0;
             int tamj = j, tami = 0;
             while (tamj < size) {
-                if (competitorMatrix[tami][tamj] == 1)
+                if (competitorMatrix[tami][tamj] == 1){
+                    list.add(button[tami][tamj]);
                     demx++;
-                else
+                    if (demx >= 5){
+                        for (JButton jButton : list) {
+                            jButton.setDisabledIcon(new ImageIcon(winItem[numberOfMatch % 2]));
+                        }
+                        return 1;
+                    }                  
+                }                
+                else{
                     demx = 0;
+                    list = new ArrayList<>();
+                }                
                 tamj++;
-                tami++;
-                if (demx >= 5)
-                    return 1;
+                tami++;                
             }
             j++;
         }
@@ -344,43 +412,63 @@ public class InGameFrm extends javax.swing.JFrame {
           .x...
           ..x..*/
         int i = 0;
+        list = new ArrayList<>();
         while (i < size) {
             int demx = 0;
             int tami = i, tamj = 0;
             while (tami < size) {
-                if (competitorMatrix[tami][tamj] == 1)
+                if (competitorMatrix[tami][tamj] == 1){
+                    list.add(button[tami][tamj]);
                     demx++;
-                else
+                    if (demx >= 5){
+                        for (JButton jButton : list) {
+                            jButton.setDisabledIcon(new ImageIcon(winItem[numberOfMatch % 2]));
+                        }
+                        return 1;
+                    }         
+                }                                       
+                else{
+                    list = new ArrayList<>();
                     demx = 0;
+                }                   
                 tamj++;
-                tami++;
-                if (demx >= 5)
-                    return 1;
+                tami++;               
             }
             i++;
         }
         return 0;
     }
 
-    public int checkCheoTrai() {
+    public int checkCheoPhai() {
+        //vẫn độ phức tạp là n^2 cách này là chia ra 2 nửa mà check
         /*...x. chéo từ phải qua trái từ trên qua trái
           ..x..
           .x...
           x....
           .....*/
+        List<JButton> list = new ArrayList<>();
         int j = size - 1;
         while (j >= 0) {
             int demx = 0;
             int tamj = j, tami = 0;
             while (tamj >= 0) {
-                if (competitorMatrix[tami][tamj] == 1)
+                if (competitorMatrix[tami][tamj] == 1){
+                    list.add(button[tami][tamj]);
                     demx++;
-                else
+                    if (demx >= 5){
+                        for (JButton jButton : list) {
+                            jButton.setDisabledIcon(new ImageIcon(winItem[numberOfMatch % 2]));
+                        }
+                        return 1;
+                    }                    
+                }                   
+                else{
+                    list = new ArrayList<>();
                     demx = 0;
+                }                  
                 tamj--;
                 tami++;
-                if (demx >= 5)
-                    return 1;
+                
             }
             j--;
         }
@@ -390,25 +478,220 @@ public class InGameFrm extends javax.swing.JFrame {
           ...x.
           ..x..*/
         int i = 0;
+        list = new ArrayList<>();
         while (i < size) {
             int demx = 0;
             int tami = i, tamj = size - 1;
             while (tami < size) {
-                if (competitorMatrix[tami][tamj] == 1)
+                if (competitorMatrix[tami][tamj] == 1){
                     demx++;
-                else
+                    if (demx >= 5){
+                        for (JButton jButton : list) {
+                            jButton.setDisabledIcon(new ImageIcon(winItem[numberOfMatch % 2]));
+                        }
+                        return 1;
+                    }                 
+                }                    
+                else{
+                    list = new ArrayList<>();
                     demx = 0;
+                }                    
                 tamj--;
-                tami++;
-                if (demx >= 5)
-                    return 1;
+                tami++;                
             }
             i++;
         }
         return 0;
     }
     
-    // checkplayer
+    //check user
+    public int checkHangU() {
+        int hang = 0;
+        List<JButton> list = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (userMatrix[i][j] == 1) {
+                    list.add(button[i][j]);
+                    hang++;
+                    if (hang >= 5){
+                       for (JButton jButton : list) {
+                           jButton.setDisabledIcon(new ImageIcon(winItem[numberOfMatch % 2]));
+                       }
+                       return 1;
+                    }   
+                } else {
+                    hang = 0;
+                    list = new ArrayList<>();
+                }
+            }
+            hang = 0;
+            list = new ArrayList<>();
+        }
+        return 0;
+    }
+
+    public int checkCotU() {
+        int cot = 0;
+        List<JButton> list = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (userMatrix[j][i] == 1) {
+                    list.add(button[i][j]);
+                    cot++;
+                    if (cot >= 5){
+                        for (JButton jButton : list) {
+                            jButton.setDisabledIcon(new ImageIcon(winItem[numberOfMatch % 2]));
+                        }
+                        return 1;
+                    }
+                } else {                   
+                    cot = 0;
+                    list = new ArrayList<>();
+                }                                 
+            }
+            cot = 0;
+            list = new ArrayList<>();
+        }
+        return 0;
+    }
+
+    public int checkCheoTraiU() {
+        //vẫn độ phức tạp là n^2 cách này là chia ra 2 nửa mà check
+        /*xx... chéo từ trái qua phải từ trên qua phải
+          .xx..
+          ..ox.
+          ...xx
+          ....x*/
+        int j = 0;
+        List<JButton> list = new ArrayList<>();
+        while (j < size) {
+            int demx = 0;
+            int tamj = j, tami = 0;
+            while (tamj < size) {
+                if (userMatrix[tami][tamj] == 1){
+                    list.add(button[tami][tamj]);
+                    demx++;
+                    if (demx >= 5){
+                        for (JButton jButton : list) {
+                            jButton.setDisabledIcon(new ImageIcon(winItem[numberOfMatch % 2]));
+                        }
+                        return 1;
+                    }                  
+                }                
+                else{
+                    demx = 0;
+                    list = new ArrayList<>();
+                }                
+                tamj++;
+                tami++;                
+            }
+            j++;
+        }
+        /*..... chéo từ trái qua phải từ dưới qua phải
+          .....
+          x....
+          .x...
+          ..x..*/
+        int i = 0;
+        list = new ArrayList<>();
+        while (i < size) {
+            int demx = 0;
+            int tami = i, tamj = 0;
+            while (tami < size) {
+                if (userMatrix[tami][tamj] == 1){
+                    list.add(button[tami][tamj]);
+                    demx++;
+                    if (demx >= 5){
+                        for (JButton jButton : list) {
+                            jButton.setDisabledIcon(new ImageIcon(winItem[numberOfMatch % 2]));
+                        }
+                        return 1;
+                    }         
+                }                                       
+                else{
+                    list = new ArrayList<>();
+                    demx = 0;
+                }                   
+                tamj++;
+                tami++;               
+            }
+            i++;
+        }
+        return 0;
+    }
+
+    public int checkCheoPhaiU() {
+        //vẫn độ phức tạp là n^2 cách này là chia ra 2 nửa mà check
+        /*...x. chéo từ phải qua trái từ trên qua trái
+          ..x..
+          .x...
+          x....
+          .....*/
+        List<JButton> list = new ArrayList<>();
+        int j = size - 1;
+        while (j >= 0) {
+            int demx = 0;
+            int tamj = j, tami = 0;
+            while (tamj >= 0) {
+                if (userMatrix[tami][tamj] == 1){
+                    list.add(button[tami][tamj]);
+                    demx++;
+                    if (demx >= 5){
+                        for (JButton jButton : list) {
+                            jButton.setDisabledIcon(new ImageIcon(winItem[numberOfMatch % 2]));
+                        }
+                        return 1;
+                    }                    
+                }                   
+                else{
+                    list = new ArrayList<>();
+                    demx = 0;
+                }                  
+                tamj--;
+                tami++;
+                
+            }
+            j--;
+        }
+        /*..... chéo từ phải qua trái từ dưới qua trái
+          .....
+          ....x
+          ...x.
+          ..x..*/
+        int i = 0;
+        list = new ArrayList<>();
+        while (i < size) {
+            int demx = 0;
+            int tami = i, tamj = size - 1;
+            while (tami < size) {
+                if (userMatrix[tami][tamj] == 1){
+                    demx++;
+                    if (demx >= 5){
+                        for (JButton jButton : list) {
+                            jButton.setDisabledIcon(new ImageIcon(winItem[numberOfMatch % 2]));
+                        }
+                        return 1;
+                    }                 
+                }                    
+                else{
+                    list = new ArrayList<>();
+                    demx = 0;
+                }                    
+                tamj--;
+                tami++;                
+            }
+            i++;
+        }
+        return 0;
+    }
+    
+    public void addCompetitorMove(String x, String y){
+        displayUserTurn();
+        startTimer();
+        setEnableButton(true);
+        caro(x, y);
+    }
+    
     
     public void caro(String x, String y) {
         int xx, yy;
@@ -420,19 +703,21 @@ public class InGameFrm extends javax.swing.JFrame {
         button[xx][yy].setEnabled(false);
         //playSound1();
         //Set bình thường về như cũ
-//        if(preButton!=null){
-//            preButton.setDisabledIcon(new ImageIcon(normalItem[numberOfMatch % 2]));
-//        }
-//        preButton = button[xx][yy];
-
+        if(preButton!=null){
+            preButton.setIcon(new ImageIcon(normalItem[not(numberOfMatch % 2)]));
+            preButton.setDisabledIcon(new ImageIcon(normalItem[not(numberOfMatch % 2)]));
+        }
+        preButton = button[xx][yy];
+        
         //set button preitem
-        button[xx][yy].setDisabledIcon(new ImageIcon(preItem[numberOfMatch % 2]));
-//        if(checkHang()==1||checkCot()==1||checkCheoPhai()==1||checkCheoTrai()==1){
-//            //timer.stop();
-//            setEnableButton(false);
-//            increaseWinMatchToCompetitor();
-//            //Client.openView(Client.View.GAMENOTICE,"Bạn đã thua","Đang thiết lập ván chơi mới");
-//        }
+        button[xx][yy].setIcon(new ImageIcon(preItem[not(numberOfMatch % 2)]));
+        button[xx][yy].setDisabledIcon(new ImageIcon(preItem[not(numberOfMatch % 2)]));
+        if(checkHang()==1||checkCot()==1||checkCheoPhai()==1||checkCheoTrai()==1){
+            timer.stop();
+            setEnableButton(false);
+            increaseWinMatchToCompetitor();
+            RunClient.openView(RunClient.View.CHILLROOM,"Bạn đã thua","Đang thiết lập ván chơi mới");
+        }
     }
 
     /**
@@ -458,7 +743,7 @@ public class InGameFrm extends javax.swing.JFrame {
         Pchucnang = new javax.swing.JPanel();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        buttonExit = new javax.swing.JButton();
         Pthoigian = new javax.swing.JPanel();
         LabelTimer = new javax.swing.JLabel();
         LabIconTurn = new javax.swing.JLabel();
@@ -474,7 +759,6 @@ public class InGameFrm extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        PanelBanco.setBackground(new java.awt.Color(153, 255, 255));
         PanelBanco.setPreferredSize(new java.awt.Dimension(600, 600));
 
         javax.swing.GroupLayout PanelBancoLayout = new javax.swing.GroupLayout(PanelBanco);
@@ -576,10 +860,10 @@ public class InGameFrm extends javax.swing.JFrame {
 
         jButton3.setText("Cầu hòa");
 
-        jButton4.setText("Thoát phòng");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        buttonExit.setText("Thoát phòng");
+        buttonExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                buttonExitActionPerformed(evt);
             }
         });
 
@@ -595,7 +879,7 @@ public class InGameFrm extends javax.swing.JFrame {
                 .addGap(62, 62, 62))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PchucnangLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton4)
+                .addComponent(buttonExit)
                 .addGap(127, 127, 127))
         );
         PchucnangLayout.setVerticalGroup(
@@ -606,7 +890,7 @@ public class InGameFrm extends javax.swing.JFrame {
                     .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(buttonExit, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18))
         );
 
@@ -755,9 +1039,9 @@ public class InGameFrm extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jTextField1KeyPressed
     
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        setEnableButton(true);
-    }//GEN-LAST:event_jButton4ActionPerformed
+    private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
+        exitGame();
+    }//GEN-LAST:event_buttonExitActionPerformed
     
   
 
@@ -777,10 +1061,10 @@ public class InGameFrm extends javax.swing.JFrame {
     private javax.swing.JPanel Pthoigian;
     private javax.swing.JLabel avatar1;
     private javax.swing.JLabel avatar2;
+    private javax.swing.JButton buttonExit;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;

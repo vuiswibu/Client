@@ -19,6 +19,7 @@ public class MainMenuFrm extends javax.swing.JFrame {
     private Vector<String> listNPlayer;
     private Thread thread;
     private boolean isPlayThread;
+    private boolean isFinded;
     DefaultTableModel defaultTableModel;
 
     public MainMenuFrm() {
@@ -31,6 +32,7 @@ public class MainMenuFrm extends javax.swing.JFrame {
         acceptpan.setVisible(false);
         defaultTableModel = (DefaultTableModel) jTable1.getModel();
         isPlayThread = true;
+        isFinded=false;
         thread = new Thread(){
             @Override
             public void run(){
@@ -109,9 +111,9 @@ public class MainMenuFrm extends javax.swing.JFrame {
         logout_btt.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         logout_btt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icons8_logout_rounded_left_24px.png"))); // NOI18N
         logout_btt.setText("Log out");
-        logout_btt.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                logout_bttMouseClicked(evt);
+        logout_btt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logout_bttActionPerformed(evt);
             }
         });
 
@@ -130,6 +132,11 @@ public class MainMenuFrm extends javax.swing.JFrame {
         frlist_btt.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 frlist_bttMouseClicked(evt);
+            }
+        });
+        frlist_btt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                frlist_bttActionPerformed(evt);
             }
         });
 
@@ -412,16 +419,6 @@ public class MainMenuFrm extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
-    private void logout_bttMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logout_bttMouseClicked
-        try {
-            RunClient.socketHandle.write("offline,"+RunClient.user.getID());
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(rootPane, ex.getMessage());
-        }
-        RunClient.closeView(RunClient.View.HOME);
-        RunClient.openView(RunClient.View.LOGIN);        
-    }//GEN-LAST:event_logout_bttMouseClicked
-
     private void rank_bttMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rank_bttMouseClicked
         RunClient.openView(RunClient.View.RANK);
     }//GEN-LAST:event_rank_bttMouseClicked
@@ -468,6 +465,7 @@ public class MainMenuFrm extends javax.swing.JFrame {
     //xử lý chấp nhận vào phòng
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try {
+            isFinded=true;
             RunClient.socketHandle.write("accept-room,");
             timer.stop();
         } catch (IOException ex) {
@@ -490,6 +488,8 @@ public class MainMenuFrm extends javax.swing.JFrame {
     }//GEN-LAST:event_createroom_bttActionPerformed
 
     private void swiftplay_bttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_swiftplay_bttActionPerformed
+        if(isFinded)
+            return;
         findingpan.setVisible(true);
         if(timer!=null){
             timer.stop();
@@ -513,6 +513,21 @@ public class MainMenuFrm extends javax.swing.JFrame {
         }
         acceptpan.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void frlist_bttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_frlist_bttActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_frlist_bttActionPerformed
+
+    private void logout_bttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logout_bttActionPerformed
+        try {
+            RunClient.socketHandle.write("offline,"+RunClient.user.getID());
+            isPlayThread = false;
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+        }
+        RunClient.closeView(RunClient.View.HOME);
+        RunClient.openView(RunClient.View.LOGIN);      
+    }//GEN-LAST:event_logout_bttActionPerformed
     
     public void sendFindRequest(){
         try {
