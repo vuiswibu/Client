@@ -89,6 +89,7 @@ public class ProfileFrm extends javax.swing.JFrame {
                 }
             }
         };
+        profile_btt = new javax.swing.JButton();
 
         javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
         jLayeredPane1.setLayout(jLayeredPane1Layout);
@@ -234,13 +235,21 @@ public class ProfileFrm extends javax.swing.JFrame {
         jButton1.setText("Change password:");
 
         savebtt.setText("Save");
-        savebtt.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                savebttMouseClicked(evt);
+        savebtt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                savebttActionPerformed(evt);
             }
         });
 
         avatarComboBox1.setMaximumRowCount(25);
+
+        profile_btt.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
+        profile_btt.setText("Refresh");
+        profile_btt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                profile_bttActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -253,11 +262,6 @@ public class ProfileFrm extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(Banner, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(chnn_label1)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton1)
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(chnn_label)
@@ -269,10 +273,21 @@ public class ProfileFrm extends javax.swing.JFrame {
                                 .addComponent(avatarComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE)))
                         .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(savebtt)
-                        .addGap(17, 17, 17))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(chnn_label1)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(28, 28, 28)
+                                .addComponent(profile_btt)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton1)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(savebtt)
+                                .addGap(17, 17, 17))))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -285,7 +300,7 @@ public class ProfileFrm extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(chnn_label2)
-                        .addGap(18, 91, Short.MAX_VALUE))
+                        .addGap(18, 95, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(avatarComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -298,14 +313,16 @@ public class ProfileFrm extends javax.swing.JFrame {
                     .addComponent(chnn_label1)
                     .addComponent(jButton1))
                 .addGap(18, 18, 18)
-                .addComponent(savebtt)
-                .addGap(12, 12, 12))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(savebtt)
+                    .addComponent(profile_btt))
+                .addGap(8, 8, 8))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void savebttMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_savebttMouseClicked
+    private void savebttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_savebttActionPerformed
         try{
             String nickname = changenntxt.getText();
             int iduser = RunClient.user.getID();
@@ -316,7 +333,7 @@ public class ProfileFrm extends javax.swing.JFrame {
                 throw new Exception("Vui lòng chọn avatar");
         }
             String ava= Integer.toString(avatar);
-            RunClient.openView(RunClient.View.WAITINGVERIFY, "Đang cập nhật", "Đang chờ phản hồi");
+            //RunClient.openView(RunClient.View.WAITINGVERIFY, "Đang cập nhật", "Đang chờ phản hồi");
             RunClient.socketHandle.write("change_profile,"+iduser+","+nickname+","+avatar);
         }
         catch (SQLException ex) {
@@ -324,7 +341,12 @@ public class ProfileFrm extends javax.swing.JFrame {
         catch (Exception ex) {
             JOptionPane.showMessageDialog(rootPane, ex.getMessage());
         }
-    }//GEN-LAST:event_savebttMouseClicked
+    }//GEN-LAST:event_savebttActionPerformed
+
+    private void profile_bttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profile_bttActionPerformed
+        RunClient.closeView(RunClient.View.PROFILE);
+        RunClient.openView(RunClient.View.PROFILE);
+    }//GEN-LAST:event_profile_bttActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Banner;
@@ -344,6 +366,7 @@ public class ProfileFrm extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JButton profile_btt;
     private javax.swing.JLabel rank_info;
     private javax.swing.JLabel rank_title;
     private javax.swing.JButton savebtt;
