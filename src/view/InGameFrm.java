@@ -120,8 +120,8 @@ public class InGameFrm extends javax.swing.JFrame {
         normalItem[1] = "src/assets/Oicon1.png";
         normalItem[0] = "src/assets/Xicon1.png";
         winItem = new String[2];
-        winItem[1] = "assets/image/owin.jpg";
-        winItem[0] = "assets/image/xwin.jpg";
+        winItem[1] = "src/assets/image/winOicon.jpg";
+        winItem[0] = "src/assets/image/winXicon.jpg";
 //        iconItem = new String[2];
 //        iconItem[1] = "assets/image/o3.jpg";
 //        iconItem[0] = "assets/image/x3.jpg";
@@ -747,6 +747,7 @@ public class InGameFrm extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         buttonExit = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
         Pthoigian = new javax.swing.JPanel();
         LabelTimer = new javax.swing.JLabel();
         LabIconTurn = new javax.swing.JLabel();
@@ -870,31 +871,35 @@ public class InGameFrm extends javax.swing.JFrame {
             }
         });
 
+        jButton4.setText("Ván mới");
+
         javax.swing.GroupLayout PchucnangLayout = new javax.swing.GroupLayout(Pchucnang);
         Pchucnang.setLayout(PchucnangLayout);
         PchucnangLayout.setHorizontalGroup(
             PchucnangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PchucnangLayout.createSequentialGroup()
-                .addGap(62, 62, 62)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(62, 62, 62))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PchucnangLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(buttonExit)
-                .addGap(127, 127, 127))
+                .addGroup(PchucnangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(buttonExit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(43, 43, 43)
+                .addGroup(PchucnangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE))
+                .addGap(62, 62, 62))
         );
         PchucnangLayout.setVerticalGroup(
             PchucnangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PchucnangLayout.createSequentialGroup()
                 .addContainerGap(16, Short.MAX_VALUE)
+                .addGroup(PchucnangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
+                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
                 .addGroup(PchucnangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(buttonExit, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18))
+                    .addComponent(buttonExit, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         Pthoigian.setBorder(javax.swing.BorderFactory.createTitledBorder("Lượt"));
@@ -1068,6 +1073,7 @@ public class InGameFrm extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;

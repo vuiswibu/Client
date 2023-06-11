@@ -615,7 +615,6 @@ public class MainMenuFrm extends javax.swing.JFrame {
         startCount();
     }
     public void stopAllThread(){
-        timer.stop();
         isPlayThread=false;
     }
     public void startCount(){

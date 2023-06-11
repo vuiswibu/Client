@@ -208,8 +208,9 @@ public class RunClient {
         if(mainmenuFrm!=null) 
         {
             mainmenuFrm.dispose();
-            if(mainmenuFrm.timer != null && mainmenuFrm.timer.isRunning())
-                mainmenuFrm.stopAllThread();
+            if(mainmenuFrm.timer != null)
+                mainmenuFrm.timer.stop();
+            mainmenuFrm.stopAllThread();
         }
         if(rankFrm!=null) rankFrm.dispose();
         if(friendFrm!=null){
