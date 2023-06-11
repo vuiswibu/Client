@@ -2,6 +2,7 @@ package view;
 
 
 import controller.RunClient;
+import java.awt.Image;
 
 import java.sql.SQLException;
 import java.awt.event.WindowAdapter;
@@ -10,8 +11,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
+import java.awt.Graphics;
+import java.awt.Rectangle;
 
 public class ProfileFrm extends javax.swing.JFrame {
     public ProfileFrm() {
@@ -22,7 +23,10 @@ public class ProfileFrm extends javax.swing.JFrame {
         Nickname_info.setText(RunClient.user.getNickname());
         Nogwon_info.setText(Integer.toString(RunClient.user.getNumberOfwin()));
         Nogplayed_info.setText(Integer.toString(RunClient.user.getNumberOfGame()));
-        avatarcbb.setIcon(new ImageIcon("assets/avatar/"+RunClient.user.getAvatar()+".jpg"));      
+        for (int i=1; i<=21; i++) {
+            avatarComboBox1.addItem(new ImageIcon(new ImageIcon("src/assets/avatar/"+i+".png").getImage().getScaledInstance(95, avatarComboBox1.getHeight(),Image.SCALE_SMOOTH)));
+        }
+        avatarComboBox1.setSelectedIndex(Integer.parseInt((RunClient.user.getAvatar())));
         if(RunClient.user.getNumberOfGame()==0){
             wrate_info.setText("-");
         }
@@ -57,11 +61,34 @@ public class ProfileFrm extends javax.swing.JFrame {
         Nogdrawn_title = new javax.swing.JLabel();
         Nogdrawn_info = new javax.swing.JLabel();
         chnn_label1 = new javax.swing.JLabel();
-        avatarcbb = new javax.swing.JLabel();
         chnn_label2 = new javax.swing.JLabel();
         changenntxt = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         savebtt = new javax.swing.JButton();
+        avatarComboBox1 = new javax.swing.JComboBox<>() {
+            @Override
+            public void paint(Graphics g) {
+                Rectangle bounds = getBounds();
+                Object selectedItem = getSelectedItem();
+
+                // Vẽ lại giao diện người dùng của JComboBox mà không bao gồm thanh cuộn
+                g.setColor(getBackground());
+                g.fillRect(0, 0, bounds.width, bounds.height);
+
+                if (selectedItem instanceof ImageIcon) {
+                    // Nếu mục đã chọn là một ImageIcon, hiển thị hình ảnh
+                    ImageIcon imageIcon = (ImageIcon) selectedItem;
+                    Image image = imageIcon.getImage();
+                    int x = 3; // Vị trí x để vẽ hình ảnh
+                    int y = (bounds.height - imageIcon.getIconHeight()) / 2; // Vị trí y để căn giữa hình ảnh
+                    g.drawImage(image, x, y, null);
+                } else {
+                    // Nếu không, hiển thị văn bản đã chọn
+                    g.setColor(getForeground());
+                    g.drawString(selectedItem.toString(), 3, bounds.height - 4);
+                }
+            }
+        };
 
         javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
         jLayeredPane1.setLayout(jLayeredPane1Layout);
@@ -201,8 +228,6 @@ public class ProfileFrm extends javax.swing.JFrame {
         chnn_label1.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         chnn_label1.setText("Change password:");
 
-        avatarcbb.setBackground(new java.awt.Color(204, 204, 204));
-
         chnn_label2.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         chnn_label2.setText("Change avatar:");
 
@@ -215,10 +240,15 @@ public class ProfileFrm extends javax.swing.JFrame {
             }
         });
 
+        avatarComboBox1.setMaximumRowCount(25);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -236,16 +266,13 @@ public class ProfileFrm extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(changenntxt)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(avatarcbb, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(avatarComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE)))
-                        .addContainerGap())))
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(savebtt)
-                .addGap(17, 17, 17))
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(savebtt)
+                        .addGap(17, 17, 17))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -254,11 +281,15 @@ public class ProfileFrm extends javax.swing.JFrame {
                 .addComponent(Banner)
                 .addGap(12, 12, 12)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(chnn_label2)
-                    .addComponent(avatarcbb, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(chnn_label2)
+                        .addGap(18, 91, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(avatarComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(chnn_label)
                     .addComponent(changenntxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -280,12 +311,13 @@ public class ProfileFrm extends javax.swing.JFrame {
             int iduser = RunClient.user.getID();
             if(nickname.isEmpty())
             throw new Exception("Vui lòng nhập nickname");
-//            int avatar = avatarcbb.getSelectedIndex();
-//            if(avatar==-1){
-//                throw new Exception("Vui lòng chọn avatar");
-//            }
+            int avatar = avatarComboBox1.getSelectedIndex();
+            if(avatar==-1){
+                throw new Exception("Vui lòng chọn avatar");
+        }
+            String ava= Integer.toString(avatar);
             RunClient.openView(RunClient.View.WAITINGVERIFY, "Đang cập nhật", "Đang chờ phản hồi");
-            RunClient.socketHandle.write("change_profile,"+nickname);
+            RunClient.socketHandle.write("change_profile,"+iduser+","+nickname+","+avatar);
         }
         catch (SQLException ex) {
             JOptionPane.showMessageDialog(rootPane, ex.getMessage());}
@@ -304,7 +336,7 @@ public class ProfileFrm extends javax.swing.JFrame {
     private javax.swing.JLabel Nogplayed_title;
     private javax.swing.JLabel Nogwon_info;
     private javax.swing.JLabel Nogwon_title;
-    private javax.swing.JLabel avatarcbb;
+    private javax.swing.JComboBox<ImageIcon> avatarComboBox1;
     private javax.swing.JTextField changenntxt;
     private javax.swing.JLabel chnn_label;
     private javax.swing.JLabel chnn_label1;

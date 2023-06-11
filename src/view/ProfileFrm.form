@@ -41,6 +41,10 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
+              <Component id="jPanel1" min="-2" pref="299" max="-2" attributes="0"/>
+              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+          </Group>
+          <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="Banner" alignment="0" max="32767" attributes="0"/>
@@ -59,22 +63,18 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="changenntxt" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
-                              <Component id="avatarcbb" min="-2" pref="108" max="-2" attributes="0"/>
+                              <Component id="avatarComboBox1" min="-2" pref="114" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <Component id="savebtt" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
+                  </Group>
               </Group>
-          </Group>
-          <Group type="102" attributes="0">
-              <Component id="jPanel1" min="-2" pref="299" max="-2" attributes="0"/>
-              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-          </Group>
-          <Group type="102" alignment="1" attributes="0">
-              <EmptySpace max="32767" attributes="0"/>
-              <Component id="savebtt" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -85,12 +85,18 @@
               <Component id="Banner" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="chnn_label2" min="-2" max="-2" attributes="0"/>
-                  <Component id="avatarcbb" min="-2" pref="102" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="chnn_label2" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" pref="91" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="avatarComboBox1" min="-2" pref="96" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
               </Group>
-              <EmptySpace max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="chnn_label" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="changenntxt" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -347,16 +353,6 @@
         <Property name="text" type="java.lang.String" value="Change password:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="avatarcbb">
-      <Properties>
-        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="cc" green="cc" red="cc" type="rgb"/>
-        </Property>
-      </Properties>
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value=""/>
-      </AuxValues>
-    </Component>
     <Component class="javax.swing.JLabel" name="chnn_label2">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -379,6 +375,19 @@
       <Events>
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="savebttMouseClicked"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="avatarComboBox1">
+      <Properties>
+        <Property name="maximumRowCount" type="int" value="25"/>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="0"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JComboBox&lt;&gt;() {&#xa;     @Override&#xa;    public void paint(Graphics g) {&#xa;        Rectangle bounds = getBounds();&#xa;        Object selectedItem = getSelectedItem();&#xa;&#xa;        // V&#x1ebd; l&#x1ea1;i giao di&#x1ec7;n ng&#x1b0;&#x1edd;i d&#xf9;ng c&#x1ee7;a JComboBox m&#xe0; kh&#xf4;ng bao g&#x1ed3;m thanh cu&#x1ed9;n&#xa;        g.setColor(getBackground());&#xa;        g.fillRect(0, 0, bounds.width, bounds.height);&#xa;&#xa;        if (selectedItem instanceof ImageIcon) {&#xa;            // N&#x1ebf;u m&#x1ee5;c &#x111;&#xe3; ch&#x1ecd;n l&#xe0; m&#x1ed9;t ImageIcon, hi&#x1ec3;n th&#x1ecb; h&#xec;nh &#x1ea3;nh&#xa;            ImageIcon imageIcon = (ImageIcon) selectedItem;&#xa;            Image image = imageIcon.getImage();&#xa;            int x = 3; // V&#x1ecb; tr&#xed; x &#x111;&#x1ec3; v&#x1ebd; h&#xec;nh &#x1ea3;nh&#xa;            int y = (bounds.height - imageIcon.getIconHeight()) / 2; // V&#x1ecb; tr&#xed; y &#x111;&#x1ec3; c&#x103;n gi&#x1eef;a h&#xec;nh &#x1ea3;nh&#xa;            g.drawImage(image, x, y, null);&#xa;        } else {&#xa;            // N&#x1ebf;u kh&#xf4;ng, hi&#x1ec3;n th&#x1ecb; v&#x103;n b&#x1ea3;n &#x111;&#xe3; ch&#x1ecd;n&#xa;            g.setColor(getForeground());&#xa;            g.drawString(selectedItem.toString(), 3, bounds.height - 4);&#xa;        }&#xa;    }&#xa;}"/>
+        <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="RegisterUserFrm_avatarComboBox1"/>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;ImageIcon&gt;"/>
+      </AuxValues>
     </Component>
   </SubComponents>
 </Form>
