@@ -11,6 +11,7 @@ import view.ProfileFrm;
 import view.FriendFrm;
 import view.CreateRoomPasswordFrm;
 import view.ChillFrm;
+import view.CompetitorInfoFrm;
 import view.InGameFrm;
 import view.JoinRoomPasswordFrm;
 
@@ -46,7 +47,7 @@ public class RunClient {
     public static InGameFrm ingameFrm;
     public static CreateRoomPasswordFrm createRoomPasswordFrm;
     public static JoinRoomPasswordFrm joinRoomPasswordFrm;
-//    public static CompetitorInfoFrm competitorInfoFrm;
+    public static CompetitorInfoFrm competitorInfoFrm;
 
 //    public static GameNoticeFrm gameNoticeFrm;
 //    public static FriendRequestFrm friendRequestFrm;
@@ -93,7 +94,10 @@ public class RunClient {
                     createRoomPasswordFrm = new CreateRoomPasswordFrm();
                     createRoomPasswordFrm.setVisible(true);
                     break;
-
+                case COMPETITORINFO:
+                    competitorInfoFrm=new CompetitorInfoFrm(user);
+                    competitorInfoFrm.setVisible(true);
+                    break;
 //                case GAMEAI:
 //                    gameAIFrm = new GameAIFrm();
 //                    gameAIFrm.setVisible(true);
@@ -183,9 +187,9 @@ public class RunClient {
                 case JOINROOMPASSWORD:
                     joinRoomPasswordFrm.dispose();
                     break;
-//                case COMPETITORINFO:
-//                    competitorInfoFrm.dispose();
-//                    break;
+                case COMPETITORINFO:
+                    competitorInfoFrm.dispose();
+                    break;
 //                case GAMENOTICE:
 //                    gameNoticeFrm.dispose();
 //                    break;
@@ -230,7 +234,7 @@ public class RunClient {
        } 
         if(createRoomPasswordFrm!=null) createRoomPasswordFrm.dispose();
         if(joinRoomPasswordFrm!=null) joinRoomPasswordFrm.dispose();
-//        if(competitorInfoFrm!=null) competitorInfoFrm.dispose();
+        if(competitorInfoFrm!=null) competitorInfoFrm.dispose();
 
 //        if(gameNoticeFrm!=null) gameNoticeFrm.dispose();
 //        if(friendRequestFrm!=null) friendRequestFrm.dispose();

@@ -120,8 +120,8 @@ public class InGameFrm extends javax.swing.JFrame {
         normalItem[1] = "src/assets/Oicon1.png";
         normalItem[0] = "src/assets/Xicon1.png";
         winItem = new String[2];
-        winItem[1] = "src/assets/image/winOicon.jpg";
-        winItem[0] = "src/assets/image/winXicon.jpg";
+        winItem[1] = "src/assets/winOicon.png";
+        winItem[0] = "src/assets/winXicon.png";
 //        iconItem = new String[2];
 //        iconItem[1] = "assets/image/o3.jpg";
 //        iconItem[0] = "assets/image/x3.jpg";
@@ -337,7 +337,8 @@ public class InGameFrm extends javax.swing.JFrame {
                     hang++;
                     if (hang >= 5){
                        for (JButton jButton : list) {
-                           jButton.setDisabledIcon(new ImageIcon(winItem[numberOfMatch % 2]));
+                           jButton.setIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
+                           jButton.setDisabledIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
                        }
                        return 1;
                     }   
@@ -362,7 +363,8 @@ public class InGameFrm extends javax.swing.JFrame {
                     cot++;
                     if (cot >= 5){
                         for (JButton jButton : list) {
-                            jButton.setDisabledIcon(new ImageIcon(winItem[numberOfMatch % 2]));
+                            jButton.setIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
+                            jButton.setDisabledIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
                         }
                         return 1;
                     }
@@ -395,7 +397,8 @@ public class InGameFrm extends javax.swing.JFrame {
                     demx++;
                     if (demx >= 5){
                         for (JButton jButton : list) {
-                            jButton.setDisabledIcon(new ImageIcon(winItem[numberOfMatch % 2]));
+                            jButton.setIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
+                            jButton.setDisabledIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
                         }
                         return 1;
                     }                  
@@ -425,7 +428,8 @@ public class InGameFrm extends javax.swing.JFrame {
                     demx++;
                     if (demx >= 5){
                         for (JButton jButton : list) {
-                            jButton.setDisabledIcon(new ImageIcon(winItem[numberOfMatch % 2]));
+                            jButton.setIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
+                            jButton.setDisabledIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
                         }
                         return 1;
                     }         
@@ -460,7 +464,8 @@ public class InGameFrm extends javax.swing.JFrame {
                     demx++;
                     if (demx >= 5){
                         for (JButton jButton : list) {
-                            jButton.setDisabledIcon(new ImageIcon(winItem[numberOfMatch % 2]));
+                            jButton.setIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
+                            jButton.setDisabledIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
                         }
                         return 1;
                     }                    
@@ -490,7 +495,8 @@ public class InGameFrm extends javax.swing.JFrame {
                     demx++;
                     if (demx >= 5){
                         for (JButton jButton : list) {
-                            jButton.setDisabledIcon(new ImageIcon(winItem[numberOfMatch % 2]));
+                            jButton.setIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
+                            jButton.setDisabledIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
                         }
                         return 1;
                     }                 
@@ -518,6 +524,7 @@ public class InGameFrm extends javax.swing.JFrame {
                     hang++;
                     if (hang >= 5){
                        for (JButton jButton : list) {
+                           jButton.setIcon(new ImageIcon(winItem[numberOfMatch % 2]));
                            jButton.setDisabledIcon(new ImageIcon(winItem[numberOfMatch % 2]));
                        }
                        return 1;
@@ -543,6 +550,7 @@ public class InGameFrm extends javax.swing.JFrame {
                     cot++;
                     if (cot >= 5){
                         for (JButton jButton : list) {
+                            jButton.setIcon(new ImageIcon(winItem[numberOfMatch % 2]));
                             jButton.setDisabledIcon(new ImageIcon(winItem[numberOfMatch % 2]));
                         }
                         return 1;
@@ -576,6 +584,7 @@ public class InGameFrm extends javax.swing.JFrame {
                     demx++;
                     if (demx >= 5){
                         for (JButton jButton : list) {
+                            jButton.setIcon(new ImageIcon(winItem[numberOfMatch % 2]));
                             jButton.setDisabledIcon(new ImageIcon(winItem[numberOfMatch % 2]));
                         }
                         return 1;
@@ -606,6 +615,7 @@ public class InGameFrm extends javax.swing.JFrame {
                     demx++;
                     if (demx >= 5){
                         for (JButton jButton : list) {
+                            jButton.setIcon(new ImageIcon(winItem[numberOfMatch % 2]));
                             jButton.setDisabledIcon(new ImageIcon(winItem[numberOfMatch % 2]));
                         }
                         return 1;
@@ -641,6 +651,7 @@ public class InGameFrm extends javax.swing.JFrame {
                     demx++;
                     if (demx >= 5){
                         for (JButton jButton : list) {
+                            jButton.setIcon(new ImageIcon(winItem[numberOfMatch % 2]));
                             jButton.setDisabledIcon(new ImageIcon(winItem[numberOfMatch % 2]));
                         }
                         return 1;
@@ -671,6 +682,7 @@ public class InGameFrm extends javax.swing.JFrame {
                     demx++;
                     if (demx >= 5){
                         for (JButton jButton : list) {
+                            jButton.setIcon(new ImageIcon(winItem[numberOfMatch % 2]));
                             jButton.setDisabledIcon(new ImageIcon(winItem[numberOfMatch % 2]));
                         }
                         return 1;

@@ -23,7 +23,7 @@ public class ProfileFrm extends javax.swing.JFrame {
         Nickname_info.setText(RunClient.user.getNickname());
         Nogwon_info.setText(Integer.toString(RunClient.user.getNumberOfwin()));
         Nogplayed_info.setText(Integer.toString(RunClient.user.getNumberOfGame()));
-        for (int i=1; i<=21; i++) {
+        for (int i=0; i<=21; i++) {
             avatarComboBox1.addItem(new ImageIcon(new ImageIcon("src/assets/avatar/"+i+".png").getImage().getScaledInstance(95, avatarComboBox1.getHeight(),Image.SCALE_SMOOTH)));
         }
         avatarComboBox1.setSelectedIndex(Integer.parseInt((RunClient.user.getAvatar())));
@@ -314,9 +314,10 @@ public class ProfileFrm extends javax.swing.JFrame {
             int avatar = avatarComboBox1.getSelectedIndex();
             if(avatar==-1){
                 throw new Exception("Vui lòng chọn avatar");
-        }
-            String ava= Integer.toString(avatar);
-            RunClient.openView(RunClient.View.WAITINGVERIFY, "Đang cập nhật", "Đang chờ phản hồi");
+            }
+            RunClient.user.setAvatar(String.valueOf(avatar));
+            RunClient.user.setNickname(nickname);
+            //RunClient.openView(RunClient.View.WAITINGVERIFY, "Đang cập nhật", "Đang chờ phản hồi");
             RunClient.socketHandle.write("change_profile,"+iduser+","+nickname+","+avatar);
         }
         catch (SQLException ex) {
