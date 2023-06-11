@@ -18,7 +18,7 @@ public class RegisterUserFrm extends javax.swing.JFrame {
         this.setIconImage(new ImageIcon("src/assets/logoicon.png").getImage());
         this.setResizable(false);
         this.setLocationRelativeTo(null);
-        for (int i=1; i<=21; i++) {
+        for (int i=0; i<=21; i++) {
             avatarComboBox1.addItem(new ImageIcon(new ImageIcon("src/assets/avatar/"+i+".png").getImage().getScaledInstance(95, avatarComboBox1.getHeight(),Image.SCALE_SMOOTH)));
         }
     }

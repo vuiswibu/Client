@@ -7,6 +7,7 @@ package view;
 
 
 import controller.RunClient;
+import java.awt.Image;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,11 +30,11 @@ public class CompetitorInfoFrm extends javax.swing.JFrame {
             initComponents();
             this.user = user;
             this.setTitle("Vũ ngu");
-            this.setIconImage(new ImageIcon("assets/image/caroicon.png").getImage());
+            this.setIconImage(new ImageIcon("src/assets/logoicon.png").getImage());
             this.setResizable(false);
             this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             this.setLocationRelativeTo(null);
-            jLabel6.setIcon(new ImageIcon("src/assets/avatar/"+user.getAvatar()+".jpg"));
+            jLabel6.setIcon(new ImageIcon(new ImageIcon("src/assets/avatar/"+user.getAvatar()+".png").getImage().getScaledInstance(jLabel6.getWidth(), jLabel6.getHeight(),Image.SCALE_SMOOTH)));
             jLabel7.setText(user.getNickname());
             jLabel8.setText(""+user.getNumberOfGame());
             jLabel9.setText(""+user.getNumberOfwin());
@@ -56,7 +57,7 @@ public class CompetitorInfoFrm extends javax.swing.JFrame {
         if(isFriend){
             jButton1.setIcon(new ImageIcon("assets/icon/friendship.png"));
             jButton1.setToolTipText("Bạn bè");
-            jLabel5.setText("Bạn bè");
+            jLabel5.setText("You are currently friends");
             
         }
         else{

@@ -122,6 +122,12 @@ public class SocketHandler implements Runnable{
                     }
                     RunClient.mainmenuFrm.updateRoomList(rooms, hostroom ,password);
                 }
+                //Xử lý hiển thị thông tin đối thủ là bạn bè/không
+                if(messageSplit[0].equals("check-friend-response")){
+                    if(RunClient.competitorInfoFrm!=null){
+                        RunClient.competitorInfoFrm.checkFriend((messageSplit[1].equals("1")));
+                    }
+                }
                 //Tạo phòng và server trả về tên phòng
                 if(messageSplit[0].equals("your-created-room")){
                     RunClient.closeAllViews();
