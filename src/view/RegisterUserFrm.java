@@ -19,7 +19,7 @@ public class RegisterUserFrm extends javax.swing.JFrame {
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         for (int i=1; i<=21; i++) {
-            avatarComboBox1.addItem(new ImageIcon(new ImageIcon("src/assets/avatar/"+i+".png").getImage().getScaledInstance(avatarComboBox1.getWidth(), avatarComboBox1.getHeight(),Image.SCALE_SMOOTH)));
+            avatarComboBox1.addItem(new ImageIcon(new ImageIcon("src/assets/avatar/"+i+".png").getImage().getScaledInstance(95, avatarComboBox1.getHeight(),Image.SCALE_SMOOTH)));
         }
     }
     @SuppressWarnings("unchecked")
