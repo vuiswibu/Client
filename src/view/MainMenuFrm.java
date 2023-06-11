@@ -16,9 +16,8 @@ import javax.swing.table.DefaultTableModel;
 
 public class MainMenuFrm extends javax.swing.JFrame {
     public Timer timer;
-    private Timer timer1;
     private Vector<Integer> listIDRoom;
-    private Vector<String> listNPlayer;
+    private Vector<String> listPassword;
     private Thread thread;
     private boolean isPlayThread;
     private boolean isFinded;
@@ -56,9 +55,9 @@ public class MainMenuFrm extends javax.swing.JFrame {
         };
         thread.start();;    
     }
-    public void updateRoomList(Vector<Integer> listData){
+    public void updateRoomList(Vector<Integer> listData, Vector<String> listPassword ){
         this.listIDRoom = listData;
-//        this.listNPlayer = listnumber;
+        this.listPassword = listPassword;
         defaultTableModel.setRowCount(0);
         for(int i=0; i<listIDRoom.size(); i++)
         {
@@ -180,10 +179,10 @@ public class MainMenuFrm extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, user_jPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(user_jPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(frlist_btt, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
-                    .addComponent(rank_btt, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
-                    .addComponent(logout_btt, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
-                    .addComponent(profile_btt, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE))
+                    .addComponent(frlist_btt, javax.swing.GroupLayout.PREFERRED_SIZE, 34, Short.MAX_VALUE)
+                    .addComponent(rank_btt, javax.swing.GroupLayout.PREFERRED_SIZE, 34, Short.MAX_VALUE)
+                    .addComponent(logout_btt, javax.swing.GroupLayout.PREFERRED_SIZE, 34, Short.MAX_VALUE)
+                    .addComponent(profile_btt, javax.swing.GroupLayout.PREFERRED_SIZE, 34, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -221,8 +220,8 @@ public class MainMenuFrm extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, game_bttLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(game_bttLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(createroom_btt, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
-                    .addComponent(swiftplay_btt, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE))
+                    .addComponent(createroom_btt, javax.swing.GroupLayout.PREFERRED_SIZE, 34, Short.MAX_VALUE)
+                    .addComponent(swiftplay_btt, javax.swing.GroupLayout.PREFERRED_SIZE, 34, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -452,25 +451,24 @@ public class MainMenuFrm extends javax.swing.JFrame {
     }//GEN-LAST:event_cancel_bttActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-//        if(jTable1.getSelectedRow()==-1){      
-//        }else{
-//            try {
-//                isPlayThread = false;
-//                int index = jTable1.getSelectedRow();
-//                int room = Integer.parseInt(listRoom.get(index).split(" ")[1]);
-//                String password = listPassword.get(index);
-//                if(password.equals(" ")){
-//                    Client.socketHandle.write("join-room,"+room);
-//                    Client.closeView(Client.View.ROOMLIST);
-//                }
-//                else{
-//                    Client.closeView(Client.View.ROOMLIST);
-//                    Client.openView(Client.View.JOINROOMPASSWORD, room, password);
-//                }
-//            } catch (IOException ex) {
-//                JOptionPane.showMessageDialog(rootPane, ex.getMessage());
-//            }
-//        }
+        if(jTable1.getSelectedRow()==-1){      
+        }else{
+            try {
+                isPlayThread = false;
+                int index = jTable1.getSelectedRow();
+                int room = listIDRoom.get(index);
+                String password = listPassword.get(index);
+                if(password.equals(" ")){
+                    RunClient.socketHandle.write("join-room,"+room);
+                    RunClient.closeView(RunClient.View.HOME);
+                }
+                else{
+                    RunClient.openView(RunClient.View.JOINROOMPASSWORD, room, password);
+                }
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+            }
+        }
     }//GEN-LAST:event_jTable1MouseClicked
     
     //xử lý chấp nhận vào phòng

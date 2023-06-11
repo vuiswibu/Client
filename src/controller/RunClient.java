@@ -12,6 +12,7 @@ import view.FriendFrm;
 import view.CreateRoomPasswordFrm;
 import view.ChillFrm;
 import view.InGameFrm;
+import view.JoinRoomPasswordFrm;
 
 public class RunClient {
     public enum View{
@@ -44,7 +45,7 @@ public class RunClient {
     public static WaitingFrm waitingFrm;
     public static InGameFrm ingameFrm;
     public static CreateRoomPasswordFrm createRoomPasswordFrm;
-//    public static JoinRoomPasswordFrm joinRoomPasswordFrm;
+    public static JoinRoomPasswordFrm joinRoomPasswordFrm;
 //    public static CompetitorInfoFrm competitorInfoFrm;
 
 //    public static GameNoticeFrm gameNoticeFrm;
@@ -126,6 +127,20 @@ public class RunClient {
             }
         }
     }
+    public static void openView(View viewName, int arg1, String arg2){
+        if(viewName != null){
+            switch(viewName){
+                case JOINROOMPASSWORD:
+                    joinRoomPasswordFrm = new JoinRoomPasswordFrm(arg1, arg2);
+                    joinRoomPasswordFrm.setVisible(true);
+                    break;
+//                case FRIENDREQUEST:
+//                    friendRequestFrm = new FriendRequestFrm(arg1, arg2);
+//                    friendRequestFrm.setVisible(true);
+            }
+        }
+    }
+    
     public static void closeView(View viewName){
         if(viewName != null){
             switch(viewName){
@@ -165,9 +180,9 @@ public class RunClient {
                 case CREATEROOMPASSWORD:
                     createRoomPasswordFrm.dispose();
                     break;
-//                case JOINROOMPASSWORD:
-//                    joinRoomPasswordFrm.dispose();
-//                    break;
+                case JOINROOMPASSWORD:
+                    joinRoomPasswordFrm.dispose();
+                    break;
 //                case COMPETITORINFO:
 //                    competitorInfoFrm.dispose();
 //                    break;
@@ -213,7 +228,7 @@ public class RunClient {
             ingameFrm.dispose();
        } 
         if(createRoomPasswordFrm!=null) createRoomPasswordFrm.dispose();
-//        if(joinRoomPasswordFrm!=null) joinRoomPasswordFrm.dispose();
+        if(joinRoomPasswordFrm!=null) joinRoomPasswordFrm.dispose();
 //        if(competitorInfoFrm!=null) competitorInfoFrm.dispose();
 
 //        if(gameNoticeFrm!=null) gameNoticeFrm.dispose();

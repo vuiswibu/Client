@@ -105,12 +105,12 @@ public class SocketHandler implements Runnable{
                 //Lấy danh sách phòng
                 if(messageSplit[0].equals("room-list")){
                     Vector<Integer> rooms = new Vector<>();
-                    //Vector<String> nplayer = new Vector<>();
+                    Vector<String> password = new Vector<>();
                     for(int i=1; i<messageSplit.length; i=i+2){
                         rooms.add(Integer.parseInt(messageSplit[i]));
-//                        nplayer.add(messageSplit[i+1]);
+                        password.add(messageSplit[i+1]);
                     }
-                    RunClient.mainmenuFrm.updateRoomList(rooms);
+                    RunClient.mainmenuFrm.updateRoomList(rooms, password);
                 }
                 //Tạo phòng và server trả về tên phòng
                 if(messageSplit[0].equals("your-created-room")){
