@@ -72,12 +72,12 @@ public class SocketHandler implements Runnable{
                     RunClient.openView(RunClient.View.REGISTER);
                     JOptionPane.showMessageDialog(RunClient.registeruserFrm, "Tên tài khoản đã được người khác sử dụng");
                 }
-                 //Xử lý nhận thông tin, chat từ toàn server
-//                if(messageSplit[0].equals("chat-server")){
-//                    if(RunClient.mainmenuFrm!=null){
-//                        RunClient.mainmenuFrm.addMessage(messageSplit[1]);
-//                    }
-//                }
+                //Xử lý nhận thông tin, chat từ toàn server
+                if(messageSplit[0].equals("chat-server")){
+                    if(RunClient.mainmenuFrm!=null){
+                        RunClient.mainmenuFrm.addMessage(messageSplit[1]);
+                    }
+                }
                 //Tài khoản đã bị banned
                 if(messageSplit[0].equals("banned-user")){
                     RunClient.closeView(RunClient.View.WAITINGVERIFY);
@@ -102,15 +102,25 @@ public class SocketHandler implements Runnable{
                         RunClient.friendFrm.updateFriendList(getListUser(messageSplit));
                     }
                 }
+                 //Lấy danh sách bạn bè
+                if(messageSplit[0].equals("client-list")){
+                    Vector<String> listuser = new Vector<>();
+                    for(int i=1; i<messageSplit.length; i++){
+                        listuser.add(messageSplit[i]);
+                    }
+                    RunClient.mainmenuFrm.updateuser(listuser);
+                }
                 //Lấy danh sách phòng
                 if(messageSplit[0].equals("room-list")){
                     Vector<Integer> rooms = new Vector<>();
+                    Vector<String> hostroom = new Vector<>();
                     Vector<String> password = new Vector<>();
-                    for(int i=1; i<messageSplit.length; i=i+2){
+                    for(int i=1; i<messageSplit.length; i=i+3){
                         rooms.add(Integer.parseInt(messageSplit[i]));
-                        password.add(messageSplit[i+1]);
+                        hostroom.add(messageSplit[i+1]);
+                        password.add(messageSplit[i+2]);
                     }
-                    RunClient.mainmenuFrm.updateRoomList(rooms, password);
+                    RunClient.mainmenuFrm.updateRoomList(rooms, hostroom ,password);
                 }
                 //Tạo phòng và server trả về tên phòng
                 if(messageSplit[0].equals("your-created-room")){
