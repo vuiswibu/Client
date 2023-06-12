@@ -15,6 +15,7 @@ import view.CompetitorInfoFrm;
 import view.InGameFrm;
 import view.JoinRoomPasswordFrm;
 import view.ChangePassFrm;
+import view.FriendRequestFrm;
 
 public class RunClient {
     public enum View{
@@ -52,7 +53,7 @@ public class RunClient {
     public static CompetitorInfoFrm competitorInfoFrm;
     public static ChangePassFrm changepassFrm;
 //    public static GameNoticeFrm gameNoticeFrm;
-//    public static FriendRequestFrm friendRequestFrm;
+    public static FriendRequestFrm friendRequestFrm;
 //    public static GameAIFrm gameAIFrm;
 //    public static RoomNameFrm roomNameFrm;
     public void initView(){
@@ -95,10 +96,6 @@ public class RunClient {
                 case CREATEROOMPASSWORD:
                     createRoomPasswordFrm = new CreateRoomPasswordFrm();
                     createRoomPasswordFrm.setVisible(true);
-                    break;
-                case COMPETITORINFO:
-                    competitorInfoFrm=new CompetitorInfoFrm(user);
-                    competitorInfoFrm.setVisible(true);
                     break;
                 case CPASS:
                     changepassFrm = new ChangePassFrm();
@@ -159,9 +156,9 @@ public class RunClient {
                     joinRoomPasswordFrm = new JoinRoomPasswordFrm(arg1, arg2);
                     joinRoomPasswordFrm.setVisible(true);
                     break;
-//                case FRIENDREQUEST:
-//                    friendRequestFrm = new FriendRequestFrm(arg1, arg2);
-//                    friendRequestFrm.setVisible(true);
+                case FRIENDREQUEST:
+                    friendRequestFrm = new FriendRequestFrm(arg1, arg2);
+                    friendRequestFrm.setVisible(true);
             }
         }
     }
@@ -217,9 +214,9 @@ public class RunClient {
 //                case GAMENOTICE:
 //                    gameNoticeFrm.dispose();
 //                    break;
-//                case FRIENDREQUEST:
-//                    friendRequestFrm.dispose();
-//                    break;
+                case FRIENDREQUEST:
+                    friendRequestFrm.dispose();
+                    break;
 //                case GAMEAI:
 //                    gameAIFrm.dispose();
 //                    break;
@@ -262,7 +259,7 @@ public class RunClient {
         if(competitorInfoFrm!=null) competitorInfoFrm.dispose();
 
 //        if(gameNoticeFrm!=null) gameNoticeFrm.dispose();
-//        if(friendRequestFrm!=null) friendRequestFrm.dispose();
+        if(friendRequestFrm!=null) friendRequestFrm.dispose();
 //        if(gameAIFrm!=null) gameAIFrm.dispose();
 //        if(roomNameFrm!=null) roomNameFrm.dispose();
     }

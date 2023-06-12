@@ -127,6 +127,17 @@ public class SocketHandler implements Runnable{
                     }
                     RunClient.mainmenuFrm.updateRoomList(rooms, hostroom ,password);
                 }
+                 //Xử lý yêu cầu kết bạn tới
+                if(messageSplit[0].equals("make-friend-request")){
+                    int ID = Integer.parseInt(messageSplit[1]);
+                    String nickname = messageSplit[2];
+                    RunClient.openView(RunClient.View.FRIENDREQUEST, ID, nickname);
+                }
+                 //Xử lý yêu cầu kết bạn tới
+                if(messageSplit[0].equals("Friend-request-accepted")){
+                    if(RunClient.competitorInfoFrm!=null)
+                        RunClient.competitorInfoFrm.acceptedfriend();
+                }
                 //Xử lý hiển thị thông tin đối thủ là bạn bè/không
                 if(messageSplit[0].equals("check-friend-response")){
                     if(RunClient.competitorInfoFrm!=null){

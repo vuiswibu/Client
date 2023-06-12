@@ -608,7 +608,7 @@ public class MainMenuFrm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnsendActionPerformed
 
     private void jTextField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyPressed
-         if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+        if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
             sendMessage();
         }
     }//GEN-LAST:event_jTextField1KeyPressed
@@ -617,8 +617,7 @@ public class MainMenuFrm extends javax.swing.JFrame {
         if (evt.getClickCount() == 2) {
             int index = jList1.locationToIndex(evt.getPoint());           
             RunClient.openView(RunClient.View.COMPETITORINFO,listuseronline.get(index));
-        }
-       
+        }       
     }//GEN-LAST:event_jList1MouseClicked
     
     public void sendFindRequest(){

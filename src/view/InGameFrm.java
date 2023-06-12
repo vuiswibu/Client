@@ -796,6 +796,11 @@ public class InGameFrm extends javax.swing.JFrame {
 
         avatar2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         avatar2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/avatar/exam1.png"))); // NOI18N
+        avatar2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                avatar2MouseClicked(evt);
+            }
+        });
 
         avatar1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         avatar1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/avatar/exam1.png"))); // NOI18N
@@ -1063,6 +1068,10 @@ public class InGameFrm extends javax.swing.JFrame {
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
         exitGame();
     }//GEN-LAST:event_buttonExitActionPerformed
+
+    private void avatar2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_avatar2MouseClicked
+         RunClient.openView(RunClient.View.COMPETITORINFO, competitor);
+    }//GEN-LAST:event_avatar2MouseClicked
     
   
 
