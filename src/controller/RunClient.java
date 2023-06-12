@@ -14,6 +14,7 @@ import view.ChillFrm;
 import view.CompetitorInfoFrm;
 import view.InGameFrm;
 import view.JoinRoomPasswordFrm;
+import view.ChangePassFrm;
 
 public class RunClient {
     public enum View{
@@ -31,7 +32,8 @@ public class RunClient {
         GAMEAI,
         ROOMNAMEFRM,
         PROFILE,
-        CHILLROOM
+        CHILLROOM,
+        CPASS
     }
     public static SocketHandler socketHandle;
     public static User user;
@@ -48,7 +50,7 @@ public class RunClient {
     public static CreateRoomPasswordFrm createRoomPasswordFrm;
     public static JoinRoomPasswordFrm joinRoomPasswordFrm;
     public static CompetitorInfoFrm competitorInfoFrm;
-
+    public static ChangePassFrm changepassFrm;
 //    public static GameNoticeFrm gameNoticeFrm;
 //    public static FriendRequestFrm friendRequestFrm;
 //    public static GameAIFrm gameAIFrm;
@@ -98,6 +100,10 @@ public class RunClient {
                     competitorInfoFrm=new CompetitorInfoFrm(user);
                     competitorInfoFrm.setVisible(true);
                     break;
+                case CPASS:
+                    changepassFrm = new ChangePassFrm();
+                    changepassFrm.setVisible(true);
+                    break;                   
 //                case GAMEAI:
 //                    gameAIFrm = new GameAIFrm();
 //                    gameAIFrm.setVisible(true);
@@ -118,6 +124,11 @@ public class RunClient {
                 case LOGIN:
                     loginFrm = new LoginFrm(arg1, arg2);
                     loginFrm.setVisible(true);
+                    break;
+                case CPASS:
+                    changepassFrm = new ChangePassFrm(arg1, arg2);
+                    changepassFrm.setVisible(true); 
+                    break;
             }
         }
     }
@@ -177,6 +188,9 @@ public class RunClient {
 //                case WAITINGROOM:
 //                    waitingRoomFrm.dispose();
 //                    break;
+                case CPASS:
+                    changepassFrm.dispose();
+                    break;
                 case GAMECLIENT:
                     ingameFrm.stopAllThread();
                     ingameFrm.dispose();
@@ -223,6 +237,7 @@ public class RunClient {
         }
         if(profileFrm!=null) profileFrm.dispose();
         if(chillFrm!=null) chillFrm.dispose();
+        if(changepassFrm!=null) changepassFrm.dispose();
 //        if(findRoomFrm!=null){
 //            findRoomFrm.stopAllThread();
 //            findRoomFrm.dispose();
