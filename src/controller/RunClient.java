@@ -94,10 +94,6 @@ public class RunClient {
                     createRoomPasswordFrm = new CreateRoomPasswordFrm();
                     createRoomPasswordFrm.setVisible(true);
                     break;
-                case COMPETITORINFO:
-                    competitorInfoFrm=new CompetitorInfoFrm(user);
-                    competitorInfoFrm.setVisible(true);
-                    break;
 //                case GAMEAI:
 //                    gameAIFrm = new GameAIFrm();
 //                    gameAIFrm.setVisible(true);
@@ -118,6 +114,18 @@ public class RunClient {
                 case LOGIN:
                     loginFrm = new LoginFrm(arg1, arg2);
                     loginFrm.setVisible(true);
+                    break;
+            }
+        }
+    }
+     public static void openView(View viewName,User user){
+        if(viewName != null){
+            switch(viewName){
+                case COMPETITORINFO:
+                    competitorInfoFrm=new CompetitorInfoFrm(user);
+                    competitorInfoFrm.setVisible(true);
+                    break;
+                
             }
         }
     }

@@ -5,6 +5,7 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.List;
 import java.util.Vector;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -13,6 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import model.User;
 
 public class MainMenuFrm extends javax.swing.JFrame {
     public Timer timer;
@@ -21,6 +23,7 @@ public class MainMenuFrm extends javax.swing.JFrame {
     private Vector<String> listPassword;
     private DefaultListModel<String> listModel;
     private Vector<String> listuser; 
+    private List<User> listuseronline;
     private Thread thread;
     private boolean isPlayThread;
     private boolean isFinded;
@@ -51,8 +54,8 @@ public class MainMenuFrm extends javax.swing.JFrame {
                 while (isPlayThread) {                    
                     try {
                         RunClient.socketHandle.write("view-room-list,");
-                        Thread.sleep(500);
-                        RunClient.socketHandle.write("view-client,");
+                        Thread.sleep(1000);
+                        RunClient.socketHandle.write("view-user,");
                     } catch (IOException ex) {
                         JOptionPane.showMessageDialog(rootPane, ex.getMessage());
                     } catch (InterruptedException ex) {
@@ -63,16 +66,25 @@ public class MainMenuFrm extends javax.swing.JFrame {
         };
         thread.start();;    
     }
-    public void updateuser(Vector<String> listuser){
-        this.listuser=listuser;
+//    public void updateuser(Vector<String> listuser){
+//        this.listuser=listuser;
+//        listModel.removeAllElements();
+//        for(int i=0; i<listuser.size(); i++)
+//        {
+//            listModel.addElement(listuser.get(i));
+//        }
+//        jList1.setModel(listModel);       
+//        
+//    }
+    public void updateuser(List<User> listuseronline){     
+        this.listuseronline=listuseronline;
         listModel.removeAllElements();
-        for(int i=0; i<listuser.size(); i++)
-        {
-            listModel.addElement(listuser.get(i));
+        for (User user : listuseronline) {
+            listModel.addElement(user.getNickname());
         }
-        jList1.setModel(listModel);       
-        
+        jList1.setModel(listModel); 
     }
+    
     public void updateRoomList(Vector<Integer> listData,Vector<String> listhostroom , Vector<String> listPassword ){
         this.listIDRoom = listData;
         this.listhostroom=listhostroom;
@@ -279,7 +291,7 @@ public class MainMenuFrm extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(findingpanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jProgressBar2, javax.swing.GroupLayout.DEFAULT_SIZE, 456, Short.MAX_VALUE))
+                    .addComponent(jProgressBar2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         findingpanLayout.setVerticalGroup(
@@ -418,6 +430,11 @@ public class MainMenuFrm extends javax.swing.JFrame {
 
         jScrollPane2.setBackground(new java.awt.Color(255, 255, 255));
 
+        jList1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jList1MouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(jList1);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -443,12 +460,11 @@ public class MainMenuFrm extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(acceptpan, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(game_btt, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(user_jPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(findingpan, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(PanelChat, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(acceptpan, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(game_btt, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(user_jPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(findingpan, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(PanelChat, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -596,6 +612,14 @@ public class MainMenuFrm extends javax.swing.JFrame {
             sendMessage();
         }
     }//GEN-LAST:event_jTextField1KeyPressed
+
+    private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseClicked
+        if (evt.getClickCount() == 2) {
+            int index = jList1.locationToIndex(evt.getPoint());           
+            RunClient.openView(RunClient.View.COMPETITORINFO,listuseronline.get(index));
+        }
+       
+    }//GEN-LAST:event_jList1MouseClicked
     
     public void sendFindRequest(){
         try {

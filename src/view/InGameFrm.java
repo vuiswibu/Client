@@ -72,8 +72,8 @@ public class InGameFrm extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         NameUser.setText(RunClient.user.getNickname());
         NameCompetitor.setText(competitor.getNickname());
-        avatar1.setIcon(new ImageIcon(new ImageIcon("src/assets/avatar/2.png").getImage().getScaledInstance(avatar1.getWidth(), avatar1.getHeight(),Image.SCALE_SMOOTH)));
-        avatar2.setIcon(new ImageIcon(new ImageIcon("src/assets/avatar/1.png").getImage().getScaledInstance(avatar2.getWidth(), avatar2.getHeight(),Image.SCALE_SMOOTH)));
+        avatar1.setIcon(new ImageIcon(new ImageIcon("src/assets/avatar/"+RunClient.user.getAvatar()+".png").getImage().getScaledInstance(avatar1.getWidth(), avatar1.getHeight(),Image.SCALE_SMOOTH)));
+        avatar2.setIcon(new ImageIcon(new ImageIcon("src/assets/avatar/"+competitor.getAvatar()+".png").getImage().getScaledInstance(avatar2.getWidth(), avatar2.getHeight(),Image.SCALE_SMOOTH)));
         
         //Setup timer
         second = 0;
@@ -359,7 +359,7 @@ public class InGameFrm extends javax.swing.JFrame {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 if (competitorMatrix[j][i] == 1) {
-                    list.add(button[i][j]);
+                    list.add(button[j][i]);
                     cot++;
                     if (cot >= 5){
                         for (JButton jButton : list) {
@@ -492,6 +492,7 @@ public class InGameFrm extends javax.swing.JFrame {
             int tami = i, tamj = size - 1;
             while (tami < size) {
                 if (competitorMatrix[tami][tamj] == 1){
+                    list.add(button[tami][tamj]);
                     demx++;
                     if (demx >= 5){
                         for (JButton jButton : list) {
@@ -546,7 +547,7 @@ public class InGameFrm extends javax.swing.JFrame {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 if (userMatrix[j][i] == 1) {
-                    list.add(button[i][j]);
+                    list.add(button[j][i]);
                     cot++;
                     if (cot >= 5){
                         for (JButton jButton : list) {

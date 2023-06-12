@@ -103,12 +103,15 @@ public class SocketHandler implements Runnable{
                     }
                 }
                  //Lấy danh sách bạn bè
-                if(messageSplit[0].equals("client-list")){
-                    Vector<String> listuser = new Vector<>();
-                    for(int i=1; i<messageSplit.length; i++){
-                        listuser.add(messageSplit[i]);
+                if(messageSplit[0].equals("user-list")){
+//                    Vector<String> listuser = new Vector<>();
+//                    for(int i=1; i<messageSplit.length; i++){
+//                        listuser.add(messageSplit[i]);
+//                    }
+//                    RunClient.mainmenuFrm.updateuser(listuser);
+                    if(RunClient.mainmenuFrm!=null){
+                        RunClient.mainmenuFrm.updateuser(getListUsers(messageSplit));
                     }
-                    RunClient.mainmenuFrm.updateuser(listuser);
                 }
                 //Lấy danh sách phòng
                 if(messageSplit[0].equals("room-list")){
@@ -255,6 +258,22 @@ public class SocketHandler implements Runnable{
         }
         return friend;
     }
+    public List<User> getListUsers(String[] message){
+        List<User> user = new ArrayList<>();
+        for(int i=1; i<message.length; i=i+9){
+            user.add(new User(Integer.parseInt(message[i]),
+                message[i+1],
+                message[i+2],
+                message[i+3],
+                message[i+4],
+                Integer.parseInt(message[i+5]),
+                Integer.parseInt(message[i+6]),
+                Integer.parseInt(message[i+7]),
+                Integer.parseInt(message[i+8])));
+        }
+        return user;
+    }
+    
     
     public void write(String message) throws IOException{
         os.write(message);
@@ -265,4 +284,5 @@ public class SocketHandler implements Runnable{
     public Socket getSocketOfClient() {
         return socketOfClient;
     }
+
 }
