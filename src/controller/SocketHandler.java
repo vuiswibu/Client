@@ -17,12 +17,7 @@ import java.util.List;
 import java.util.Vector;
 import javax.swing.JOptionPane;
 import model.User;
-import view.WaitingFrm;
 
-/**
- *
- * @author boi09
- */
 public class SocketHandler implements Runnable{
     private BufferedWriter os;
     private BufferedReader is;
@@ -65,6 +60,13 @@ public class SocketHandler implements Runnable{
                     RunClient.closeView(RunClient.View.WAITINGVERIFY);
                     RunClient.openView(RunClient.View.LOGIN,messageSplit[1],messageSplit[2]);
                     RunClient.loginFrm.showError("Tài khoản đã đăng nhập ở nơi khác");
+                }
+                //Mật khẩu không đúng
+                if(messageSplit[0].equals("duppassword")){
+                    System.out.println("Mật khẩu không đúng");
+//                    RunClient.closeView(RunClient.View.WAITINGVERIFY);
+                    RunClient.openView(RunClient.View.CPASS,messageSplit[1],messageSplit[2]);
+                    RunClient.changepassFrm.showError("Mật khẩu không chính xác");
                 }
                 //Xử lý register trùng tên
                 if(messageSplit[0].equals("duplicate-username")){

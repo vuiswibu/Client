@@ -27,6 +27,7 @@ public class ProfileFrm extends javax.swing.JFrame {
             avatarComboBox1.addItem(new ImageIcon(new ImageIcon("src/assets/avatar/"+i+".png").getImage().getScaledInstance(95, avatarComboBox1.getHeight(),Image.SCALE_SMOOTH)));
         }
         avatarComboBox1.setSelectedIndex(Integer.parseInt((RunClient.user.getAvatar())));
+        changenntxt.setText(RunClient.user.getNickname());
         if(RunClient.user.getNumberOfGame()==0){
             wrate_info.setText("-");
         }
@@ -233,6 +234,11 @@ public class ProfileFrm extends javax.swing.JFrame {
         chnn_label2.setText("Change avatar:");
 
         jButton1.setText("Change password:");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         savebtt.setText("Save");
         savebtt.addActionListener(new java.awt.event.ActionListener() {
@@ -347,6 +353,10 @@ public class ProfileFrm extends javax.swing.JFrame {
         RunClient.closeView(RunClient.View.PROFILE);
         RunClient.openView(RunClient.View.PROFILE);
     }//GEN-LAST:event_profile_bttActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        RunClient.openView(RunClient.View.CPASS);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Banner;
