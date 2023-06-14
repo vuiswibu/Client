@@ -49,6 +49,7 @@ public class InGameFrm extends javax.swing.JFrame {
     private int competitorWin;
     
     public int numberOfMatch;
+    private int steps; 
     /**
      * Creates new form InGameFrm
      */
@@ -66,6 +67,7 @@ public class InGameFrm extends javax.swing.JFrame {
         //init score
         userWin = 0;
         competitorWin = 0;
+        steps=0;
         
         this.setTitle("Phòng: "+room_ID+" ("+RunClient.user.getUsername()+")");
         this.setResizable(false);
@@ -122,9 +124,6 @@ public class InGameFrm extends javax.swing.JFrame {
         winItem = new String[2];
         winItem[1] = "src/assets/winOicon.png";
         winItem[0] = "src/assets/winXicon.png";
-//        iconItem = new String[2];
-//        iconItem[1] = "assets/image/o3.jpg";
-//        iconItem[0] = "assets/image/x3.jpg";
         preItem = new String[2];
         preItem[1] = "src/assets/preOicon1.png";
         preItem[0] = "src/assets/preXicon1.png";
@@ -137,8 +136,6 @@ public class InGameFrm extends javax.swing.JFrame {
                 button[i][j] = new JButton("");
                 button[i][j].setBackground(Color.WHITE);
                 button[i][j].setOpaque(true);
-//                button[i][j].setDisabledIcon(new ImageIcon("src/assets/new.png"));
-//                button[i][j].setIcon(new ImageIcon("src/assets/new.png"));
                 PanelBanco.add(button[i][j]);
             }
         }
@@ -179,6 +176,7 @@ public class InGameFrm extends javax.swing.JFrame {
                             //button[a][b].setIcon(new ImageIcon(normalItem[(numberOfMatch % 2)]));
                             button[a][b].setDisabledIcon(new ImageIcon(normalItem[(numberOfMatch % 2)]));
                             matrix[a][b] = 1;
+                            steps++;
                             userMatrix[a][b] = 1;
                             button[a][b].setEnabled(false);
                             try {
@@ -790,6 +788,7 @@ public class InGameFrm extends javax.swing.JFrame {
         // danh dau vi tri danh
         competitorMatrix[xx][yy] = 1;
         matrix[xx][yy] = 1;
+        steps++;
         button[xx][yy].setEnabled(false);
         //playSound1();
         //Set bình thường về như cũ
