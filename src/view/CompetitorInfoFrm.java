@@ -232,7 +232,7 @@ public class CompetitorInfoFrm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "you're friend with this retard");
         }
         else{
-            int res = JOptionPane.showConfirmDialog(rootPane, "Bạn đồng ý gửi lời mời kết bạn tới đối thủ chứ", "Xác nhận yêu cầu kết bạn", JOptionPane.YES_NO_OPTION);
+            int res = JOptionPane.showConfirmDialog(rootPane, "Do you agree to send a friend request to the opponent?", "Confirm friend request", JOptionPane.YES_NO_OPTION);
             if(res==JOptionPane.YES_OPTION){
                 try {
                     RunClient.socketHandle.write("make-friend,"+user.getID());

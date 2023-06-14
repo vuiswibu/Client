@@ -88,7 +88,7 @@
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="Danh s&#xe1;ch b&#x1ea1;n b&#xe8;"/>
+            <Property name="text" type="java.lang.String" value="Friend list"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="jButton1">

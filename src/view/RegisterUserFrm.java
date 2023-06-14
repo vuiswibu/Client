@@ -97,7 +97,7 @@ public class RegisterUserFrm extends javax.swing.JFrame {
 
         avatarComboBox1.setMaximumRowCount(25);
 
-        jButton1.setText("Đăng kí");
+        jButton1.setText("Register");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -105,7 +105,7 @@ public class RegisterUserFrm extends javax.swing.JFrame {
         });
 
         jLabel5.setForeground(new java.awt.Color(0, 0, 255));
-        jLabel5.setText("Đã có tài khoản, đăng nhập tại đây");
+        jLabel5.setText("Already have an account, log in here");
         jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel5MouseClicked(evt);

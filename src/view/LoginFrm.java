@@ -58,7 +58,7 @@ public class LoginFrm extends javax.swing.JFrame {
 
         jLabel4.setText("Password");
 
-        jButton2.setText("Đăng kí");
+        jButton2.setText("Register");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);

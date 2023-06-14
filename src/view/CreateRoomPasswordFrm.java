@@ -13,7 +13,6 @@ public class CreateRoomPasswordFrm extends javax.swing.JFrame {
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setIconImage(new ImageIcon("src/assets/logoicon.png").getImage());
-        jButton1.setIcon(new ImageIcon("assets/icon/door_exit.png"));
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

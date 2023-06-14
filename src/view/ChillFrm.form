@@ -91,7 +91,7 @@
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="Ph&#xf2;ng {}"/>
+            <Property name="text" type="java.lang.String" value="Room {}"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel4">
@@ -102,7 +102,7 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="M&#x1ead;t kh&#x1ea9;u:"/>
+            <Property name="text" type="java.lang.String" value="Password:"/>
           </Properties>
         </Component>
       </SubComponents>
@@ -113,7 +113,7 @@
           <Font name="Tahoma" size="14" style="2"/>
         </Property>
         <Property name="horizontalAlignment" type="int" value="0"/>
-        <Property name="text" type="java.lang.String" value="&#x110;ang ch&#x1edd; ng&#x1b0;&#x1edd;i ch&#x1a1;i kh&#xe1;c v&#xe0;o ph&#xf2;ng"/>
+        <Property name="text" type="java.lang.String" value="Waiting for other players to join the room."/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="jButton2">

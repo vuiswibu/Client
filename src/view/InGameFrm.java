@@ -842,7 +842,7 @@ public class InGameFrm extends javax.swing.JFrame {
 
         PanelRight.setBackground(new java.awt.Color(153, 255, 255));
 
-        Pnguoichoi.setBorder(javax.swing.BorderFactory.createTitledBorder("Người chơi"));
+        Pnguoichoi.setBorder(javax.swing.BorderFactory.createTitledBorder("Player"));
         Pnguoichoi.setForeground(new java.awt.Color(204, 204, 204));
 
         avatar2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -869,7 +869,7 @@ public class InGameFrm extends javax.swing.JFrame {
         NameCompetitor.setText("{Name 2}");
 
         LabelTiso.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        LabelTiso.setText("Tỉ số: 0 - 0");
+        LabelTiso.setText("Score: 0-0");
 
         javax.swing.GroupLayout PnguoichoiLayout = new javax.swing.GroupLayout(Pnguoichoi);
         Pnguoichoi.setLayout(PnguoichoiLayout);
@@ -929,16 +929,16 @@ public class InGameFrm extends javax.swing.JFrame {
 
         Pchucnang.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jButton2.setText("Đánh lại");
+        jButton2.setText("Undo");
 
-        btnhoa.setText("Cầu hòa");
+        btnhoa.setText("Draw request");
         btnhoa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnhoaActionPerformed(evt);
             }
         });
 
-        buttonExit.setText("Thoát phòng");
+        buttonExit.setText("Exit Room");
         buttonExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonExitActionPerformed(evt);
@@ -950,15 +950,15 @@ public class InGameFrm extends javax.swing.JFrame {
         PchucnangLayout.setHorizontalGroup(
             PchucnangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PchucnangLayout.createSequentialGroup()
-                .addGap(57, 57, 57)
-                .addComponent(btnhoa, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(46, 46, 46)
+                .addComponent(btnhoa, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(57, 57, 57))
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(40, 40, 40))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PchucnangLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(buttonExit)
-                .addGap(129, 129, 129))
+                .addComponent(buttonExit, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(112, 112, 112))
         );
         PchucnangLayout.setVerticalGroup(
             PchucnangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -972,7 +972,7 @@ public class InGameFrm extends javax.swing.JFrame {
                 .addGap(12, 12, 12))
         );
 
-        Pthoigian.setBorder(javax.swing.BorderFactory.createTitledBorder("Lượt"));
+        Pthoigian.setBorder(javax.swing.BorderFactory.createTitledBorder("Turn"));
 
         LabelTimer.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         LabelTimer.setText("01:00");

@@ -141,7 +141,7 @@ public class SocketHandler implements Runnable{
                     RunClient.openView(RunClient.View.CHILLROOM);
                     RunClient.chillFrm.setRoomName(messageSplit[1]);
                     if(messageSplit.length==3)
-                        RunClient.chillFrm.setRoomPassword("Mật khẩu phòng: "+messageSplit[2]);
+                        RunClient.chillFrm.setRoomPassword("Password: "+messageSplit[2]);
                 }
                  if(messageSplit[0].equals("go-to-room")){
                     System.out.println("Vào phòng");

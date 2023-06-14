@@ -117,7 +117,7 @@ public class FriendFrm extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Danh sách bạn bè");
+        jLabel1.setText("Friend list");
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icons8_logout_rounded_left_24px.png"))); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -207,16 +207,6 @@ public class FriendFrm extends javax.swing.JFrame {
                 throw new Exception("Player is in the match");
             }
             isClicked = true;
-            int res = JOptionPane.showConfirmDialog(rootPane, "Do you want to challenge this friend?", "Challenge Confirmation", JOptionPane.YES_NO_OPTION);
-            if(res == JOptionPane.YES_OPTION){
-                RunClient.closeAllViews();
-                RunClient.openView(RunClient.View.WAITINGVERIFY, "Challenge", "Waiting for a response");
-                RunClient.socketHandle.write("duel-request,"+friend.getID());
-            }
-            else{
-                isClicked = false;
-                startThread();
-            }
 
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(rootPane, ex.getMessage());

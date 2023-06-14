@@ -52,11 +52,11 @@ public class ChillFrm extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Phòng {}");
+        jLabel1.setText("Room {}");
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 2, 14)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel4.setText("Mật khẩu:");
+        jLabel4.setText("Password:");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -80,7 +80,7 @@ public class ChillFrm extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 2, 14)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("Đang chờ người chơi khác vào phòng");
+        jLabel2.setText("Waiting for other players to join the room.");
 
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/icons8_delete_24px_1.png"))); // NOI18N
         jButton2.addActionListener(new java.awt.event.ActionListener() {
