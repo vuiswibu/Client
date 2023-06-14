@@ -188,13 +188,6 @@ public class RunClient {
                     friendFrm.stopAllThread();
                     friendFrm.dispose();
                     break;
-//                case FINDROOM:
-//                    findRoomFrm.stopAllThread();
-//                    findRoomFrm.dispose();
-//                    break;
-//                case WAITINGROOM:
-//                    waitingRoomFrm.dispose();
-//                    break;
                 case CPASS:
                     changepassFrm.dispose();
                     break;
@@ -211,9 +204,9 @@ public class RunClient {
                 case COMPETITORINFO:
                     competitorInfoFrm.dispose();
                     break;
-//                case GAMENOTICE:
-//                    gameNoticeFrm.dispose();
-//                    break;
+                case WAITINGVERIFY:
+                    waitingFrm.dispose();
+                    break;
                 case FRIENDREQUEST:
                     friendRequestFrm.dispose();
                     break;
@@ -258,7 +251,6 @@ public class RunClient {
         if(joinRoomPasswordFrm!=null) joinRoomPasswordFrm.dispose();
         if(competitorInfoFrm!=null) competitorInfoFrm.dispose();
 
-//        if(gameNoticeFrm!=null) gameNoticeFrm.dispose();
         if(friendRequestFrm!=null) friendRequestFrm.dispose();
 //        if(gameAIFrm!=null) gameAIFrm.dispose();
 //        if(roomNameFrm!=null) roomNameFrm.dispose();

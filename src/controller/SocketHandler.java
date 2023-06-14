@@ -210,9 +210,23 @@ public class SocketHandler implements Runnable{
                 if(messageSplit[0].equals("chat")){
                     RunClient.ingameFrm.addMessage(messageSplit[1]);
                 }
-//                if(messageSplit[0].equals("draw-request")){
-//                    RunClient.ingameFrm.showDrawRequest();
-//                }
+                if(messageSplit[0].equals("draw-request")){
+                    RunClient.ingameFrm.showDrawRequest();
+                }
+                if(messageSplit[0].equals("draw-refuse")){
+                    if(RunClient.waitingFrm!=null) 
+                        RunClient.closeView(RunClient.View.WAITINGVERIFY);
+                    RunClient.ingameFrm.displayDrawRefuse();
+                }
+                if(messageSplit[0].equals("draw-game")){
+                    RunClient.closeView(RunClient.View.WAITINGVERIFY);
+                    RunClient.openView(RunClient.View.WAITINGVERIFY, "Ván chơi hòa", "Ván chơi mới dang được thiết lập");
+                    RunClient.ingameFrm.displayDrawGame();
+                    Thread.sleep(4000);
+                    RunClient.ingameFrm.updateNumberOfGame();
+                    RunClient.closeView(RunClient.View.WAITINGVERIFY);
+                    RunClient.ingameFrm.newgame();
+                }
                 
                 if(messageSplit[0].equals("banned-notice")){
                     RunClient.socketHandle.write("offline,"+RunClient.user.getID());

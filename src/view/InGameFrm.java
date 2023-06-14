@@ -136,6 +136,7 @@ public class InGameFrm extends javax.swing.JFrame {
             for (int j = 0; j < size; j++) {
                 button[i][j] = new JButton("");
                 button[i][j].setBackground(Color.WHITE);
+                button[i][j].setOpaque(true);
 //                button[i][j].setDisabledIcon(new ImageIcon("src/assets/new.png"));
 //                button[i][j].setIcon(new ImageIcon("src/assets/new.png"));
                 PanelBanco.add(button[i][j]);
@@ -181,7 +182,7 @@ public class InGameFrm extends javax.swing.JFrame {
                             userMatrix[a][b] = 1;
                             button[a][b].setEnabled(false);
                             try {
-                                if (checkHangU() == 1 || checkCotU() == 1 || checkCheoTraiU() == 1 || checkCheoPhaiU() == 1) {
+                                if (checkWinner(userMatrix,0)==1) {
                                     //Xử lý khi người chơi này thắng
                                     increaseWinMatchToUser();
                                     RunClient.socketHandle.write("win,"+a+","+b);
@@ -263,7 +264,6 @@ public class InGameFrm extends javax.swing.JFrame {
     public void displayUserTurn(){
         LabTextTurn.setText("My Turn");
         LabelTimer.setVisible(true);
-        jButton3.setVisible(true);
         if(numberOfMatch % 2==0){
             LabTextTurn.setForeground(Color.RED);
         }
@@ -275,7 +275,6 @@ public class InGameFrm extends javax.swing.JFrame {
     public void displayCompetitorTurn() {
         LabTextTurn.setText("Enemy Turn");
         LabelTimer.setVisible(false);
-        jButton3.setVisible(false);
         if(not(numberOfMatch % 2)==0){
             LabTextTurn.setForeground(Color.RED);
         }
@@ -283,6 +282,16 @@ public class InGameFrm extends javax.swing.JFrame {
             LabTextTurn.setForeground(Color.GREEN);
         }
         LabIconTurn.setIcon(new ImageIcon(normalItem[not(numberOfMatch % 2)]));
+    }
+    public void displayDrawGame(){
+        String tmp = jTextArea1.getText();
+        tmp += "--Ván chơi hòa--\n";
+        jTextArea1.setText(tmp);
+    }
+    public void displayDrawRefuse(){
+        JOptionPane.showMessageDialog(rootPane, "Đối thủ không chấp nhận hòa, mời bạn chơi tiếp");
+        timer.start();
+        setEnableButton(true);
     }
     public void addMessage(String message){
         String temp = jTextArea1.getText();
@@ -326,6 +335,70 @@ public class InGameFrm extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(rootPane, 
                         "--Bạn đã thua, tỉ số hiện tại là "+userWin+"-"+competitorWin+"--");
     }
+    public void showDrawRequest() {
+        int res = JOptionPane.showConfirmDialog(rootPane, "The opponent wants to draw this game, do you agree?", "Draw request", JOptionPane.YES_NO_OPTION);
+        if (res == JOptionPane.YES_OPTION) {
+            try {
+                timer.stop();
+                setEnableButton(false);
+                RunClient.socketHandle.write("draw-confirm,");
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+            }
+        }
+        else{
+            try {
+                RunClient.socketHandle.write("draw-refuse,");
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+            }
+        }
+    }
+    public int checkWinner(int[][] Button,int user) {
+        List<JButton> list = new ArrayList<>();
+	int[] lineX = {1, 1, 0, 1};  // |các đường cần kiểm tra(ngang, dọc, chéo xuống trái, chéo xuống phải)
+	int[] lineY = {0, 1, 1, -1}; // |để tìm người thắng
+	for (int x = 0; x < size; x++) {
+            for (int y = 0; y < size; y++) {
+                if(Button[x][y] == 1) { // Nếu ô này đã được player chọn => kiểm tra			
+                    for (int i = 0; i < 4; i++) { // kiểm tra 4 đường
+                        list = new ArrayList<>();
+			int count = 1; // count = 5 => player chiến thắng
+                        list.add(button[x][y]);
+			for(int j = 1; j <= 4; j++) { // kiểm tra 4 ô tiếp theo
+                            int vtx = x + lineX[i]*j; // vị trí x của ô tiếp theo cần check
+                            int vty = y + lineY[i]*j; // vị trí y của ô tiếp theo cần check
+                            // vtx hoặc vty < 0 hoặc > Value.SIZE, hoặc ô này != ô đầu => khỏi ktra
+                            if(vtx < 0 || vty < 0 || vtx >= size || vty >= size) break;
+                            if(Button[vtx][vty] == 1){
+                                list.add(button[vtx][vty]);
+                                count++;
+                            }
+                            else break;
+			}
+			if(count == 5){
+                            if(user==1){ //competitor
+                                for (JButton jButton : list) {
+                                    jButton.setIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
+                                    jButton.setDisabledIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
+                                }
+                            }
+                            else{ //user
+                                for (JButton jButton : list) {
+                                    jButton.setIcon(new ImageIcon(winItem[numberOfMatch % 2]));
+                                    jButton.setDisabledIcon(new ImageIcon(winItem[numberOfMatch % 2]));
+                                }
+                            }
+                            return 1;
+                        } // Player thắng
+                    }
+		}
+            }
+	}
+	return 0; // Không ai thắng cả
+    }
+    
+    // <editor-fold defaultstate="collapsed" desc="Cách check thắng không tối ưu">    
     // check competitor
     public int checkHang() {
         int hang = 0;
@@ -699,7 +772,7 @@ public class InGameFrm extends javax.swing.JFrame {
             i++;
         }
         return 0;
-    }
+    }// </editor-fold>   
     
     public void addCompetitorMove(String x, String y){
         displayUserTurn();
@@ -728,13 +801,14 @@ public class InGameFrm extends javax.swing.JFrame {
         //set button preitem
         button[xx][yy].setIcon(new ImageIcon(preItem[not(numberOfMatch % 2)]));
         button[xx][yy].setDisabledIcon(new ImageIcon(preItem[not(numberOfMatch % 2)]));
-        if(checkHang()==1||checkCot()==1||checkCheoPhai()==1||checkCheoTrai()==1){
+        if(checkWinner(competitorMatrix,1)==1){
             timer.stop();
             setEnableButton(false);
             increaseWinMatchToCompetitor();
             RunClient.openView(RunClient.View.CHILLROOM,"Bạn đã thua","Đang thiết lập ván chơi mới");
         }
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -758,9 +832,8 @@ public class InGameFrm extends javax.swing.JFrame {
         LabelTiso = new javax.swing.JLabel();
         Pchucnang = new javax.swing.JPanel();
         jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        btnhoa = new javax.swing.JButton();
         buttonExit = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
         Pthoigian = new javax.swing.JPanel();
         LabelTimer = new javax.swing.JLabel();
         LabIconTurn = new javax.swing.JLabel();
@@ -880,7 +953,12 @@ public class InGameFrm extends javax.swing.JFrame {
 
         jButton2.setText("Đánh lại");
 
-        jButton3.setText("Cầu hòa");
+        btnhoa.setText("Cầu hòa");
+        btnhoa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnhoaActionPerformed(evt);
+            }
+        });
 
         buttonExit.setText("Thoát phòng");
         buttonExit.addActionListener(new java.awt.event.ActionListener() {
@@ -889,35 +967,31 @@ public class InGameFrm extends javax.swing.JFrame {
             }
         });
 
-        jButton4.setText("Ván mới");
-
         javax.swing.GroupLayout PchucnangLayout = new javax.swing.GroupLayout(Pchucnang);
         Pchucnang.setLayout(PchucnangLayout);
         PchucnangLayout.setHorizontalGroup(
             PchucnangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PchucnangLayout.createSequentialGroup()
+                .addGap(57, 57, 57)
+                .addComponent(btnhoa, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(57, 57, 57))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PchucnangLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(PchucnangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(buttonExit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(43, 43, 43)
-                .addGroup(PchucnangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE))
-                .addGap(62, 62, 62))
+                .addComponent(buttonExit)
+                .addGap(129, 129, 129))
         );
         PchucnangLayout.setVerticalGroup(
             PchucnangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PchucnangLayout.createSequentialGroup()
                 .addContainerGap(16, Short.MAX_VALUE)
-                .addGroup(PchucnangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
                 .addGroup(PchucnangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonExit, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnhoa, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(buttonExit, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12))
         );
 
         Pthoigian.setBorder(javax.swing.BorderFactory.createTitledBorder("Lượt"));
@@ -1072,6 +1146,20 @@ public class InGameFrm extends javax.swing.JFrame {
     private void avatar2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_avatar2MouseClicked
          RunClient.openView(RunClient.View.COMPETITORINFO, competitor);
     }//GEN-LAST:event_avatar2MouseClicked
+
+    private void btnhoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnhoaActionPerformed
+        try {
+            int res = JOptionPane.showConfirmDialog(rootPane, "Do you really want to draw this game?", "Draw Request", JOptionPane.YES_NO_OPTION);
+            if (res == JOptionPane.YES_OPTION) {
+                RunClient.socketHandle.write("draw-request,");
+                timer.stop();
+                setEnableButton(false);
+                RunClient.openView(RunClient.View.WAITINGVERIFY, "Draw Request", "Chill man wait for the opponent's response ");
+            }
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+        }
+    }//GEN-LAST:event_btnhoaActionPerformed
     
   
 
@@ -1091,11 +1179,10 @@ public class InGameFrm extends javax.swing.JFrame {
     private javax.swing.JPanel Pthoigian;
     private javax.swing.JLabel avatar1;
     private javax.swing.JLabel avatar2;
+    private javax.swing.JButton btnhoa;
     private javax.swing.JButton buttonExit;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
