@@ -185,25 +185,25 @@ public class MainMenuFrm extends javax.swing.JFrame {
         user_jPanelLayout.setHorizontalGroup(
             user_jPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(user_jPanelLayout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addComponent(logout_btt)
-                .addGap(15, 15, 15)
-                .addComponent(profile_btt, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addComponent(logout_btt, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(frlist_btt, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(rank_btt, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addComponent(profile_btt, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(11, 11, 11)
+                .addComponent(frlist_btt, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(rank_btt, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
+                .addContainerGap())
         );
         user_jPanelLayout.setVerticalGroup(
             user_jPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, user_jPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(user_jPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(frlist_btt, javax.swing.GroupLayout.PREFERRED_SIZE, 34, Short.MAX_VALUE)
-                    .addComponent(rank_btt, javax.swing.GroupLayout.PREFERRED_SIZE, 34, Short.MAX_VALUE)
-                    .addComponent(logout_btt, javax.swing.GroupLayout.PREFERRED_SIZE, 34, Short.MAX_VALUE)
-                    .addComponent(profile_btt, javax.swing.GroupLayout.PREFERRED_SIZE, 34, Short.MAX_VALUE))
+                    .addComponent(frlist_btt, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
+                    .addComponent(rank_btt, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
+                    .addComponent(logout_btt, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
+                    .addComponent(profile_btt, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -241,8 +241,8 @@ public class MainMenuFrm extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, game_bttLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(game_bttLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(createroom_btt, javax.swing.GroupLayout.PREFERRED_SIZE, 34, Short.MAX_VALUE)
-                    .addComponent(swiftplay_btt, javax.swing.GroupLayout.PREFERRED_SIZE, 34, Short.MAX_VALUE))
+                    .addComponent(createroom_btt, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
+                    .addComponent(swiftplay_btt, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -480,26 +480,28 @@ public class MainMenuFrm extends javax.swing.JFrame {
         findingpan.setVisible(false);
     }//GEN-LAST:event_cancel_bttActionPerformed
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        int index = jTable1.getSelectedRow();
-        if(index==-1){      
-        }else if(listhostroom.get(index).equals(RunClient.user.getNickname()) ){
-            JOptionPane.showMessageDialog(rootPane, "Are you retarded?\nYou're the host of this room.\nWait for an retard like you to join the room", "Vũ ngu", JOptionPane.INFORMATION_MESSAGE, new ImageIcon(new ImageIcon("src/assets/cac.png").getImage().getScaledInstance(40, 40,Image.SCALE_SMOOTH)));
-        }else{
-            try {
-                isPlayThread = false;
-                int room = listIDRoom.get(index);
-                String password = listPassword.get(index);
-                if(password.equals(" ")){
-                    RunClient.socketHandle.write("join-room,"+room);
-                    RunClient.closeView(RunClient.View.HOME);
+        if(evt.getClickCount() == 2){
+            int index = jTable1.getSelectedRow();
+            if(index==-1){      
+            }else if(listhostroom.get(index).equals(RunClient.user.getNickname()) ){
+                JOptionPane.showMessageDialog(rootPane, "Are you retarded?\nYou're the host of this room.\nWait for an retard like you to join the room", "Vũ ngu", JOptionPane.INFORMATION_MESSAGE, new ImageIcon(new ImageIcon("src/assets/cac.png").getImage().getScaledInstance(40, 40,Image.SCALE_SMOOTH)));
+            }else{
+                try {
+                    isPlayThread = false;
+                    int room = listIDRoom.get(index);
+                    String password = listPassword.get(index);
+                    if(password.equals(" ")){
+                        RunClient.socketHandle.write("join-room,"+room);
+                        RunClient.closeView(RunClient.View.HOME);
+                    }
+                    else{
+                        RunClient.openView(RunClient.View.JOINROOMPASSWORD, room, password);
+                    }
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(rootPane, ex.getMessage());
                 }
-                else{
-                    RunClient.openView(RunClient.View.JOINROOMPASSWORD, room, password);
-                }
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(rootPane, ex.getMessage());
             }
-        }
+        }        
     }//GEN-LAST:event_jTable1MouseClicked
         //xử lý chấp nhận vào phòng
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
