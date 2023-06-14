@@ -51,6 +51,11 @@ public class CompetitorInfoFrm extends javax.swing.JFrame {
             btnmakefriend.setToolTipText("click here to make friend");
             labmakefriend.setText("Don't make friend with this shit OMG");
         }
+        if(RunClient.user.getNickname().equals(user.getNickname())){
+            btnmakefriend.setEnabled(false);
+            labmakefriend.setText("Retard");
+        }
+            
     }
     public void acceptedfriend (){
         this.isFriend = true;
@@ -223,7 +228,7 @@ public class CompetitorInfoFrm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnmakefriendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnmakefriendActionPerformed
-        if(isFriend){
+       if(isFriend){
             JOptionPane.showMessageDialog(rootPane, "you're friend with this retard");
         }
         else{
