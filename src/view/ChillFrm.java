@@ -122,6 +122,7 @@ public class ChillFrm extends javax.swing.JFrame {
         try {
             RunClient.closeView(RunClient.View.CHILLROOM);
             RunClient.socketHandle.write("cancel-room,");
+            RunClient.openView(RunClient.View.HOME);
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(rootPane, ex.getMessage());
         }
