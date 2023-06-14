@@ -21,6 +21,7 @@ import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import model.User;
+import model.Value;
 
 /**
  *
@@ -28,7 +29,6 @@ import model.User;
  */
 public class InGameFrm extends javax.swing.JFrame {
 
-    private final int size = 25;
     private JButton[][] button;
     
     private User competitor;
@@ -112,9 +112,9 @@ public class InGameFrm extends javax.swing.JFrame {
         });
         
         //SetUp play Matrix
-        competitorMatrix = new int[size][size];
-        matrix = new int[size][size];
-        userMatrix = new int[size][size];
+        competitorMatrix = new int[Value.SIZE][Value.SIZE];
+        matrix = new int[Value.SIZE][Value.SIZE];
+        userMatrix = new int[Value.SIZE][Value.SIZE];
         //Setup icon (odd for Oicon and even for Xicon)
         normalItem = new String[2];
         normalItem[1] = "src/assets/Oicon1.png";
@@ -130,10 +130,10 @@ public class InGameFrm extends javax.swing.JFrame {
         preItem[0] = "src/assets/preXicon1.png";
         
         this.getContentPane().setLayout(null);
-        PanelBanco.setLayout(new GridLayout(size, size));
-        button = new JButton[size][size];
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
+        PanelBanco.setLayout(new GridLayout(Value.SIZE, Value.SIZE));
+        button = new JButton[Value.SIZE][Value.SIZE];
+        for (int i = 0; i < Value.SIZE; i++) {
+            for (int j = 0; j < Value.SIZE; j++) {
                 button[i][j] = new JButton("");
                 button[i][j].setBackground(Color.WHITE);
                 button[i][j].setOpaque(true);
@@ -168,8 +168,8 @@ public class InGameFrm extends javax.swing.JFrame {
         timer.stop();
     }
     void setupButton() {
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
+        for (int i = 0; i < Value.SIZE; i++) {
+            for (int j = 0; j < Value.SIZE; j++) {
                 final int a = i, b = j;
 
                 button[a][b].addActionListener(new ActionListener() {
@@ -182,7 +182,7 @@ public class InGameFrm extends javax.swing.JFrame {
                             userMatrix[a][b] = 1;
                             button[a][b].setEnabled(false);
                             try {
-                                if (checkWinner(userMatrix,0)==1) {
+                                if (checkWinner(userMatrix,Value.USER_VALUE)==1) {
                                     //Xử lý khi người chơi này thắng
                                     increaseWinMatchToUser();
                                     RunClient.socketHandle.write("win,"+a+","+b);
@@ -235,8 +235,8 @@ public class InGameFrm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "Đối thủ đi trước");
             displayCompetitorTurn();
         }
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
+        for (int i = 0; i < Value.SIZE; i++) {
+            for (int j = 0; j < Value.SIZE; j++) {
                 button[i][j].setIcon(new ImageIcon("src/assets/new.png"));
                 button[i][j].setDisabledIcon(new ImageIcon("src/assets/new.png"));
                 button[i][j].setText("");
@@ -300,8 +300,8 @@ public class InGameFrm extends javax.swing.JFrame {
         jTextArea1.setCaretPosition(jTextArea1.getDocument().getLength());
     }
     public void setEnableButton(boolean b) {
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
+        for (int i = 0; i < Value.SIZE; i++) {
+            for (int j = 0; j < Value.SIZE; j++) {
                 if (matrix[i][j] == 0) {
                     button[i][j].setEnabled(b);
                 }
@@ -358,8 +358,8 @@ public class InGameFrm extends javax.swing.JFrame {
         List<JButton> list = new ArrayList<>();
 	int[] lineX = {1, 1, 0, 1};  // |các đường cần kiểm tra(ngang, dọc, chéo xuống trái, chéo xuống phải)
 	int[] lineY = {0, 1, 1, -1}; // |để tìm người thắng
-	for (int x = 0; x < size; x++) {
-            for (int y = 0; y < size; y++) {
+	for (int x = 0; x < Value.SIZE; x++) {
+            for (int y = 0; y < Value.SIZE; y++) {
                 if(Button[x][y] == 1) { // Nếu ô này đã được player chọn => kiểm tra			
                     for (int i = 0; i < 4; i++) { // kiểm tra 4 đường
                         list = new ArrayList<>();
@@ -369,7 +369,7 @@ public class InGameFrm extends javax.swing.JFrame {
                             int vtx = x + lineX[i]*j; // vị trí x của ô tiếp theo cần check
                             int vty = y + lineY[i]*j; // vị trí y của ô tiếp theo cần check
                             // vtx hoặc vty < 0 hoặc > Value.SIZE, hoặc ô này != ô đầu => khỏi ktra
-                            if(vtx < 0 || vty < 0 || vtx >= size || vty >= size) break;
+                            if(vtx < 0 || vty < 0 || vtx >= Value.SIZE || vty >= Value.SIZE) break;
                             if(Button[vtx][vty] == 1){
                                 list.add(button[vtx][vty]);
                                 count++;
@@ -377,18 +377,19 @@ public class InGameFrm extends javax.swing.JFrame {
                             else break;
 			}
 			if(count == 5){
-                            if(user==1){ //competitor
-                                for (JButton jButton : list) {
-                                    jButton.setIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
-                                    jButton.setDisabledIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
-                                }
-                            }
-                            else{ //user
+                            if(user==Value.USER_VALUE){ //competitor
                                 for (JButton jButton : list) {
                                     jButton.setIcon(new ImageIcon(winItem[numberOfMatch % 2]));
                                     jButton.setDisabledIcon(new ImageIcon(winItem[numberOfMatch % 2]));
                                 }
                             }
+                            else{ //user
+                                for (JButton jButton : list) {
+                                    jButton.setIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
+                                    jButton.setDisabledIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
+                                }
+                            }
+                            
                             return 1;
                         } // Player thắng
                     }
@@ -403,8 +404,8 @@ public class InGameFrm extends javax.swing.JFrame {
     public int checkHang() {
         int hang = 0;
         List<JButton> list = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
+        for (int i = 0; i < Value.SIZE; i++) {
+            for (int j = 0; j < Value.SIZE; j++) {
                 if (competitorMatrix[i][j] == 1) {
                     list.add(button[i][j]);
                     hang++;
@@ -429,8 +430,8 @@ public class InGameFrm extends javax.swing.JFrame {
     public int checkCot() {
         int cot = 0;
         List<JButton> list = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
+        for (int i = 0; i < Value.SIZE; i++) {
+            for (int j = 0; j < Value.SIZE; j++) {
                 if (competitorMatrix[j][i] == 1) {
                     list.add(button[j][i]);
                     cot++;
@@ -461,10 +462,10 @@ public class InGameFrm extends javax.swing.JFrame {
           ....x*/
         int j = 0;
         List<JButton> list = new ArrayList<>();
-        while (j < size) {
+        while (j < Value.SIZE) {
             int demx = 0;
             int tamj = j, tami = 0;
-            while (tamj < size) {
+            while (tamj < Value.SIZE) {
                 if (competitorMatrix[tami][tamj] == 1){
                     list.add(button[tami][tamj]);
                     demx++;
@@ -492,10 +493,10 @@ public class InGameFrm extends javax.swing.JFrame {
           ..x..*/
         int i = 0;
         list = new ArrayList<>();
-        while (i < size) {
+        while (i < Value.SIZE) {
             int demx = 0;
             int tami = i, tamj = 0;
-            while (tami < size) {
+            while (tami < Value.SIZE) {
                 if (competitorMatrix[tami][tamj] == 1){
                     list.add(button[tami][tamj]);
                     demx++;
@@ -527,7 +528,7 @@ public class InGameFrm extends javax.swing.JFrame {
           x....
           .....*/
         List<JButton> list = new ArrayList<>();
-        int j = size - 1;
+        int j = Value.SIZE - 1;
         while (j >= 0) {
             int demx = 0;
             int tamj = j, tami = 0;
@@ -560,10 +561,10 @@ public class InGameFrm extends javax.swing.JFrame {
           ..x..*/
         int i = 0;
         list = new ArrayList<>();
-        while (i < size) {
+        while (i < Value.SIZE) {
             int demx = 0;
-            int tami = i, tamj = size - 1;
-            while (tami < size) {
+            int tami = i, tamj = Value.SIZE - 1;
+            while (tami < Value.SIZE) {
                 if (competitorMatrix[tami][tamj] == 1){
                     list.add(button[tami][tamj]);
                     demx++;
@@ -591,8 +592,8 @@ public class InGameFrm extends javax.swing.JFrame {
     public int checkHangU() {
         int hang = 0;
         List<JButton> list = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
+        for (int i = 0; i < Value.SIZE; i++) {
+            for (int j = 0; j < Value.SIZE; j++) {
                 if (userMatrix[i][j] == 1) {
                     list.add(button[i][j]);
                     hang++;
@@ -617,8 +618,8 @@ public class InGameFrm extends javax.swing.JFrame {
     public int checkCotU() {
         int cot = 0;
         List<JButton> list = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
+        for (int i = 0; i < Value.SIZE; i++) {
+            for (int j = 0; j < Value.SIZE; j++) {
                 if (userMatrix[j][i] == 1) {
                     list.add(button[j][i]);
                     cot++;
@@ -649,10 +650,10 @@ public class InGameFrm extends javax.swing.JFrame {
           ....x*/
         int j = 0;
         List<JButton> list = new ArrayList<>();
-        while (j < size) {
+        while (j < Value.SIZE) {
             int demx = 0;
             int tamj = j, tami = 0;
-            while (tamj < size) {
+            while (tamj < Value.SIZE) {
                 if (userMatrix[tami][tamj] == 1){
                     list.add(button[tami][tamj]);
                     demx++;
@@ -680,10 +681,10 @@ public class InGameFrm extends javax.swing.JFrame {
           ..x..*/
         int i = 0;
         list = new ArrayList<>();
-        while (i < size) {
+        while (i < Value.SIZE) {
             int demx = 0;
             int tami = i, tamj = 0;
-            while (tami < size) {
+            while (tami < Value.SIZE) {
                 if (userMatrix[tami][tamj] == 1){
                     list.add(button[tami][tamj]);
                     demx++;
@@ -715,7 +716,7 @@ public class InGameFrm extends javax.swing.JFrame {
           x....
           .....*/
         List<JButton> list = new ArrayList<>();
-        int j = size - 1;
+        int j = Value.SIZE - 1;
         while (j >= 0) {
             int demx = 0;
             int tamj = j, tami = 0;
@@ -748,10 +749,10 @@ public class InGameFrm extends javax.swing.JFrame {
           ..x..*/
         int i = 0;
         list = new ArrayList<>();
-        while (i < size) {
+        while (i < Value.SIZE) {
             int demx = 0;
-            int tami = i, tamj = size - 1;
-            while (tami < size) {
+            int tami = i, tamj = Value.SIZE - 1;
+            while (tami < Value.SIZE) {
                 if (userMatrix[tami][tamj] == 1){
                     demx++;
                     if (demx >= 5){
@@ -801,7 +802,7 @@ public class InGameFrm extends javax.swing.JFrame {
         //set button preitem
         button[xx][yy].setIcon(new ImageIcon(preItem[not(numberOfMatch % 2)]));
         button[xx][yy].setDisabledIcon(new ImageIcon(preItem[not(numberOfMatch % 2)]));
-        if(checkWinner(competitorMatrix,1)==1){
+        if(checkWinner(competitorMatrix,Value.COMPETITOR_VALUE)==1){
             timer.stop();
             setEnableButton(false);
             increaseWinMatchToCompetitor();
