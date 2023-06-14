@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package controller;
 
 import static controller.RunClient.ingameFrm;
@@ -29,7 +25,7 @@ public class SocketHandler implements Runnable{
 
         try {
             // Gửi yêu cầu kết nối tới Server đang lắng nghe
-            socketOfClient = new Socket("127.0.0.1", 7777);
+            socketOfClient = new Socket("192.168.50.37", 7777);
             System.out.println("Kết nối thành công!");
             // Tạo luồng đầu ra tại client (Gửi dữ liệu tới server)
             os = new BufferedWriter(new OutputStreamWriter(socketOfClient.getOutputStream()));
@@ -64,7 +60,7 @@ public class SocketHandler implements Runnable{
                 //Mật khẩu không đúng
                 if(messageSplit[0].equals("duppassword")){
                     System.out.println("Mật khẩu không đúng");
-//                    RunClient.closeView(RunClient.View.WAITINGVERIFY);
+                    RunClient.closeView(RunClient.View.WAITINGVERIFY);
                     RunClient.openView(RunClient.View.CPASS,messageSplit[1],messageSplit[2]);
                     RunClient.changepassFrm.showError("Mật khẩu không chính xác");
                 }
@@ -106,11 +102,6 @@ public class SocketHandler implements Runnable{
                 }
                  //Lấy danh sách bạn bè
                 if(messageSplit[0].equals("user-list")){
-//                    Vector<String> listuser = new Vector<>();
-//                    for(int i=1; i<messageSplit.length; i++){
-//                        listuser.add(messageSplit[i]);
-//                    }
-//                    RunClient.mainmenuFrm.updateuser(listuser);
                     if(RunClient.mainmenuFrm!=null){
                         RunClient.mainmenuFrm.updateuser(getListUsers(messageSplit));
                     }

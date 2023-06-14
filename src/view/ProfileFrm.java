@@ -3,11 +3,6 @@ package view;
 
 import controller.RunClient;
 import java.awt.Image;
-
-import java.sql.SQLException;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.IOException;
 import java.sql.SQLException;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -333,10 +328,10 @@ public class ProfileFrm extends javax.swing.JFrame {
             String nickname = changenntxt.getText();
             int iduser = RunClient.user.getID();
             if(nickname.isEmpty())
-            throw new Exception("Vui lòng nhập nickname");
+            throw new Exception("Enter nickname");
             int avatar = avatarComboBox1.getSelectedIndex();
             if(avatar==-1){
-                throw new Exception("Vui lòng chọn avatar");  }
+                throw new Exception("Choose avatar");  }
             RunClient.user.setAvatar(String.valueOf(avatar));
             RunClient.user.setNickname(nickname);
             //RunClient.openView(RunClient.View.WAITINGVERIFY, "Đang cập nhật", "Đang chờ phản hồi");

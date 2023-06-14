@@ -1,32 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package view;
 
 import controller.RunClient;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
-/**
- *
- * @author Admin
- */
 public class CreateRoomPasswordFrm extends javax.swing.JFrame {
 
-    /**
-     * Creates new form CreateRoomPasswordFrm
-     */
     public CreateRoomPasswordFrm() {
         initComponents();
-        this.setIconImage(new ImageIcon("src/assets/logoicon.png").getImage());
+        this.setTitle("Game Caro Online");
         this.setResizable(false);
         this.setLocationRelativeTo(null);
+        this.setIconImage(new ImageIcon("src/assets/logoicon.png").getImage());
         jButton1.setIcon(new ImageIcon("assets/icon/door_exit.png"));
     }
     @SuppressWarnings("unchecked")
@@ -127,7 +113,7 @@ public class CreateRoomPasswordFrm extends javax.swing.JFrame {
         try {
             String password = jTextField1.getText();
             if(password.isEmpty())
-                throw new Exception("Vui lòng nhập mật khẩu bạn muốn đặt cho phòng");
+                throw new Exception("Enter the password");
             RunClient.socketHandle.write("create-room,"+password);
             RunClient.closeView(RunClient.View.CREATEROOMPASSWORD);
         } catch (IOException ex) {

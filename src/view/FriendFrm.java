@@ -27,9 +27,10 @@ public class FriendFrm extends javax.swing.JFrame {
     public FriendFrm() {
         initComponents();
         defaultTableModel = (DefaultTableModel) jTable1.getModel();
-        this.setIconImage(new ImageIcon("src/assets/logoicon.png").getImage());
+        this.setTitle("Game Caro Online");
         this.setResizable(false);
         this.setLocationRelativeTo(null);
+        this.setIconImage(new ImageIcon("src/assets/logoicon.png").getImage());
         isClicked = false;
         requestUpdate();
         startThread();
@@ -200,16 +201,16 @@ public class FriendFrm extends javax.swing.JFrame {
             if(jTable1.getSelectedRow()==-1) return;
             User friend = listFriend.get(jTable1.getSelectedRow());
             if(!friend.isIsOnline()){
-                throw new Exception("Người chơi không online");
+                throw new Exception("Players not online");
             }
             if(friend.isIsPlaying()){
-                throw new Exception("Người chơi đang trong trận đấu");
+                throw new Exception("Player is in the match");
             }
             isClicked = true;
-            int res = JOptionPane.showConfirmDialog(rootPane, "Bạn có muốn thách đấu người bạn này không", "Xác nhận thách đầu", JOptionPane.YES_NO_OPTION);
+            int res = JOptionPane.showConfirmDialog(rootPane, "Do you want to challenge this friend?", "Challenge Confirmation", JOptionPane.YES_NO_OPTION);
             if(res == JOptionPane.YES_OPTION){
                 RunClient.closeAllViews();
-                RunClient.openView(RunClient.View.WAITINGVERIFY, "Thách đấu", "Đang chờ phản hồi từ đối thủ");
+                RunClient.openView(RunClient.View.WAITINGVERIFY, "Challenge", "Waiting for a response");
                 RunClient.socketHandle.write("duel-request,"+friend.getID());
             }
             else{

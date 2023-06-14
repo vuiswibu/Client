@@ -52,10 +52,8 @@ public class RunClient {
     public static JoinRoomPasswordFrm joinRoomPasswordFrm;
     public static CompetitorInfoFrm competitorInfoFrm;
     public static ChangePassFrm changepassFrm;
-//    public static GameNoticeFrm gameNoticeFrm;
     public static FriendRequestFrm friendRequestFrm;
 //    public static GameAIFrm gameAIFrm;
-//    public static RoomNameFrm roomNameFrm;
     public void initView(){
         loginFrm = new LoginFrm();
         loginFrm.setVisible(true);
@@ -105,9 +103,6 @@ public class RunClient {
 //                    gameAIFrm = new GameAIFrm();
 //                    gameAIFrm.setVisible(true);
 //                    break;
-//                case ROOMNAMEFRM:
-//                    roomNameFrm = new RoomNameFrm();
-//                    roomNameFrm.setVisible(true);
             }
         }
     }
@@ -213,9 +208,6 @@ public class RunClient {
 //                case GAMEAI:
 //                    gameAIFrm.dispose();
 //                    break;
-//                case ROOMNAMEFRM:
-//                    roomNameFrm.dispose();
-//                    break;
             }
             
         }
@@ -238,10 +230,6 @@ public class RunClient {
         if(profileFrm!=null) profileFrm.dispose();
         if(chillFrm!=null) chillFrm.dispose();
         if(changepassFrm!=null) changepassFrm.dispose();
-//        if(findRoomFrm!=null){
-//            findRoomFrm.stopAllThread();
-//            findRoomFrm.dispose();
-//        } 
         if(waitingFrm!=null) waitingFrm.dispose();
         if(ingameFrm!=null){
             ingameFrm.stopAllThread();
@@ -253,7 +241,6 @@ public class RunClient {
 
         if(friendRequestFrm!=null) friendRequestFrm.dispose();
 //        if(gameAIFrm!=null) gameAIFrm.dispose();
-//        if(roomNameFrm!=null) roomNameFrm.dispose();
     }
     public static void main(String[] args) {
         new RunClient().initView();

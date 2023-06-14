@@ -53,21 +53,6 @@ public class User {
         this.isOnline = isOnline;
         this.isPlaying = isPlaying; 
     }
-    
-//    public User(int ID, String username, String password, String nickname, String avatar, int numberOfGame, int numberOfwin, int numberOfDraw, boolean isOnline, boolean isPlaying, int rank, int score) {
-//        this.ID = ID;
-//        this.username = username;
-//        this.password = password;
-//        this.nickname = nickname;
-//        this.avatar = avatar;
-//        this.numberOfGame = numberOfGame;
-//        this.numberOfwin = numberOfwin;
-//        this.numberOfDraw = numberOfDraw;
-//        this.isOnline = isOnline;
-//        this.isPlaying = isPlaying;
-//        this.rank = rank;
-//        this.score = score;
-//    }
 
     public User(int ID, String username, String password, String nickname, String avatar, int numberOfGame, int numberOfwin, int numberOfDraw) {
         this.ID = ID;

@@ -1,10 +1,7 @@
 package view;
 
 import java.awt.Image;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import javax.swing.ImageIcon;
-import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
 public class WaitingFrm extends javax.swing.JFrame {
     public WaitingFrm() {
@@ -17,7 +14,6 @@ public class WaitingFrm extends javax.swing.JFrame {
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setIconImage(new ImageIcon("src/assets/logoicon.png").getImage());
-        this.setResizable(false);
         jLabel1.setText(title);
         jLabel3.setText(message);
         ImageIcon icon = new ImageIcon("src/assets/loading.gif");

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package view;
 
 import javax.swing.ImageIcon;
@@ -189,19 +185,19 @@ public class RegisterUserFrm extends javax.swing.JFrame {
         try {
             String username = jTextField1.getText();
             if(username.isEmpty())
-            throw new Exception("Vui lòng nhập tên tài khoản");
+            throw new Exception("Enter the username");
             String password = String.copyValueOf(jPasswordField1.getPassword());
             if(password.isEmpty())
-            throw new Exception("Vui lòng nhập mật khẩu");
+            throw new Exception("Enter the password");
             String nickName = jTextField2.getText();
             int avatar = avatarComboBox1.getSelectedIndex();
             if(avatar==-1){
-                throw new Exception("Vui lòng chọn avatar");
+                throw new Exception("Choose avatar");
             }
             if(nickName.isEmpty())
-            throw new Exception("Vui lòng nhập nickname");
+            throw new Exception("Enter nickname");
             RunClient.closeAllViews();
-            RunClient.openView(RunClient.View.WAITINGVERIFY, "Đăng kí tài khoản", "Đang chờ phản hồi");
+            RunClient.openView(RunClient.View.WAITINGVERIFY, "Registering", "Waiting for repose");
             RunClient.socketHandle.write("register,"+username+","+password+","+nickName+","+avatar);
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(rootPane, ex.getMessage());
