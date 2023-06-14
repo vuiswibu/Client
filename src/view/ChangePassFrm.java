@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package view;
 
 import controller.RunClient;
@@ -12,9 +8,10 @@ import javax.swing.JOptionPane;
 public class ChangePassFrm extends javax.swing.JFrame {
     public ChangePassFrm() {
         initComponents();
-        this.setIconImage(new ImageIcon("src/assets/logoicon.png").getImage());
+        this.setTitle("Game Caro Online");
         this.setResizable(false);
         this.setLocationRelativeTo(null);
+        this.setIconImage(new ImageIcon("src/assets/logoicon.png").getImage());
     }
     public  ChangePassFrm(String cpass, String npass) {
         initComponents();
@@ -120,16 +117,15 @@ public class ChangePassFrm extends javax.swing.JFrame {
             String rnpass = retypetxt.getText();
             int userID =  RunClient.user.getID();
             if(cpass.isEmpty())
-                throw new Exception("Vui lòng nhập mật khẩu hiện tại");
+                throw new Exception("Please enter your current password");
             if(npass.isEmpty())
-                throw new Exception("Hãy nhập mật khẩu mới");
+                throw new Exception("Enter new password");
             if(rnpass.isEmpty())
-                throw new Exception("Vui lòng nhập lại mật khẩu mới để kiểm tra");
+                throw new Exception("Please, retype the new password");
             if(cpass.equals(npass))
-                throw new Exception("Mật khẩu mới phải khác mật khẩu cũ");
+                throw new Exception("New password have to different form current password");
             if(!npass.equals(rnpass))
-                throw new Exception("Xin hãy nhập lại mật khẩu mới đúng");
-            //RunClient.openView(RunClient.View.WAITINGVERIFY, "Đăng nhập", "Đang xác thực thông tin đăng nhập");
+                throw new Exception("Retype password is different from new password");
             RunClient.socketHandle.write("vpass,"+userID+","+cpass+","+npass);
             RunClient.closeView(RunClient.View.CPASS);
         } catch (Exception ex) {

@@ -66,16 +66,6 @@ public class MainMenuFrm extends javax.swing.JFrame {
         };
         thread.start();;    
     }
-//    public void updateuser(Vector<String> listuser){
-//        this.listuser=listuser;
-//        listModel.removeAllElements();
-//        for(int i=0; i<listuser.size(); i++)
-//        {
-//            listModel.addElement(listuser.get(i));
-//        }
-//        jList1.setModel(listModel);       
-//        
-//    }
     public void updateuser(List<User> listuseronline){     
         this.listuseronline=listuseronline;
         listModel.removeAllElements();
@@ -175,11 +165,6 @@ public class MainMenuFrm extends javax.swing.JFrame {
         frlist_btt.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         frlist_btt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/friend.png"))); // NOI18N
         frlist_btt.setText("Friend");
-        frlist_btt.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                frlist_bttMouseClicked(evt);
-            }
-        });
         frlist_btt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 frlist_bttActionPerformed(evt);
@@ -189,11 +174,6 @@ public class MainMenuFrm extends javax.swing.JFrame {
         rank_btt.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
         rank_btt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/Sword.png"))); // NOI18N
         rank_btt.setText("Charts");
-        rank_btt.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                rank_bttMouseClicked(evt);
-            }
-        });
         rank_btt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rank_bttActionPerformed(evt);
@@ -220,10 +200,10 @@ public class MainMenuFrm extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, user_jPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(user_jPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(frlist_btt, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
-                    .addComponent(rank_btt, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
-                    .addComponent(logout_btt, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
-                    .addComponent(profile_btt, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE))
+                    .addComponent(frlist_btt, javax.swing.GroupLayout.PREFERRED_SIZE, 34, Short.MAX_VALUE)
+                    .addComponent(rank_btt, javax.swing.GroupLayout.PREFERRED_SIZE, 34, Short.MAX_VALUE)
+                    .addComponent(logout_btt, javax.swing.GroupLayout.PREFERRED_SIZE, 34, Short.MAX_VALUE)
+                    .addComponent(profile_btt, javax.swing.GroupLayout.PREFERRED_SIZE, 34, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -261,8 +241,8 @@ public class MainMenuFrm extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, game_bttLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(game_bttLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(createroom_btt, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
-                    .addComponent(swiftplay_btt, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE))
+                    .addComponent(createroom_btt, javax.swing.GroupLayout.PREFERRED_SIZE, 34, Short.MAX_VALUE)
+                    .addComponent(swiftplay_btt, javax.swing.GroupLayout.PREFERRED_SIZE, 34, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -488,18 +468,9 @@ public class MainMenuFrm extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
-    private void rank_bttMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rank_bttMouseClicked
-        RunClient.openView(RunClient.View.RANK);
-    }//GEN-LAST:event_rank_bttMouseClicked
-
-    private void frlist_bttMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_frlist_bttMouseClicked
-        RunClient.openView(RunClient.View.FRIENDLIST);
-    }//GEN-LAST:event_frlist_bttMouseClicked
-
     private void profile_bttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profile_bttActionPerformed
         RunClient.openView(RunClient.View.PROFILE);
     }//GEN-LAST:event_profile_bttActionPerformed
-
     private void cancel_bttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancel_bttActionPerformed
         try {
             RunClient.socketHandle.write("cancel-room,");
@@ -508,7 +479,6 @@ public class MainMenuFrm extends javax.swing.JFrame {
         }
         findingpan.setVisible(false);
     }//GEN-LAST:event_cancel_bttActionPerformed
-
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         int index = jTable1.getSelectedRow();
         if(index==-1){      
@@ -531,8 +501,7 @@ public class MainMenuFrm extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_jTable1MouseClicked
-    
-    //xử lý chấp nhận vào phòng
+        //xử lý chấp nhận vào phòng
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try {
             isFinded=true;
@@ -542,7 +511,7 @@ public class MainMenuFrm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, ex.getMessage());
         }
     }//GEN-LAST:event_jButton2ActionPerformed
-
+         //Xử lý tạo phòng   
     private void createroom_bttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createroom_bttActionPerformed
         int res = JOptionPane.showConfirmDialog(rootPane, "Bạn có muốn đặt mật khẩu cho phòng không?", "Tạo phòng", JOptionPane.YES_NO_OPTION);
         if(res==JOptionPane.YES_OPTION){
@@ -556,7 +525,7 @@ public class MainMenuFrm extends javax.swing.JFrame {
             }
         } 
     }//GEN-LAST:event_createroom_bttActionPerformed
-
+        //Xử lý tạo phòng chơi nhanh
     private void swiftplay_bttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_swiftplay_bttActionPerformed
         if(isFinded)
             return;
@@ -568,8 +537,7 @@ public class MainMenuFrm extends javax.swing.JFrame {
         acceptpan.setVisible(false);
         sendFindRequest();
     }//GEN-LAST:event_swiftplay_bttActionPerformed
-    
-    public void setAllVisibleFalse(){
+        public void setAllVisibleFalse(){
         acceptpan.setVisible(false);
         findingpan.setVisible(false);
     }
@@ -583,11 +551,9 @@ public class MainMenuFrm extends javax.swing.JFrame {
         }
         acceptpan.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
-
     private void frlist_bttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_frlist_bttActionPerformed
-        // TODO add your handling code here:
+        RunClient.openView(RunClient.View.FRIENDLIST);
     }//GEN-LAST:event_frlist_bttActionPerformed
-
     private void logout_bttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logout_bttActionPerformed
         try {
             RunClient.socketHandle.write("offline,"+RunClient.user.getID());
@@ -595,12 +561,12 @@ public class MainMenuFrm extends javax.swing.JFrame {
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(rootPane, ex.getMessage());
         }
-        RunClient.closeView(RunClient.View.HOME);
+        RunClient.closeAllViews();
         RunClient.openView(RunClient.View.LOGIN);      
     }//GEN-LAST:event_logout_bttActionPerformed
 
     private void rank_bttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rank_bttActionPerformed
-        // TODO add your handling code here:
+        RunClient.openView(RunClient.View.RANK);
     }//GEN-LAST:event_rank_bttActionPerformed
 
     private void btnsendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsendActionPerformed
@@ -619,7 +585,6 @@ public class MainMenuFrm extends javax.swing.JFrame {
             RunClient.openView(RunClient.View.COMPETITORINFO,listuseronline.get(index));
         }       
     }//GEN-LAST:event_jList1MouseClicked
-    
     public void sendFindRequest(){
         try {
             RunClient.socketHandle.write("quick-room,");
@@ -643,7 +608,6 @@ public class MainMenuFrm extends javax.swing.JFrame {
     public void startCount(){
         timer = new Timer(1000, new ActionListener() {
             int count = 15;
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (count >= 0) {

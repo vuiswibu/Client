@@ -5,11 +5,7 @@
  */
 package view;
 import controller.RunClient;
-import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.RenderingHints;
-import java.awt.Transparency;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -155,7 +151,7 @@ public class RankFrm extends javax.swing.JFrame {
         if(jTable1.getSelectedRow()==-1)
             return;
         if(listUserStatics.get(jTable1.getSelectedRow()).getID()==RunClient.user.getID()){
-            JOptionPane.showMessageDialog(rootPane, "Thứ hạng của bạn là "+(jTable1.getSelectedRow()+1));
+            JOptionPane.showMessageDialog(rootPane, "Your rank is "+(jTable1.getSelectedRow()+1));
             return;
         }
         //RunClient.openView(RunClient.View.COMPETITORINFO,listUserStatics.get(jTable1.getSelectedRow()));

@@ -1,19 +1,16 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package view;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import java.awt.event.WindowEvent;
 import controller.RunClient;
+
 public class LoginFrm extends javax.swing.JFrame {
     public LoginFrm() {
         initComponents();
-        this.setIconImage(new ImageIcon("src/assets/logoicon.png").getImage());
+        this.setTitle("Game Caro Online");
         this.setResizable(false);
         this.setLocationRelativeTo(null);
+        this.setIconImage(new ImageIcon("src/assets/logoicon.png").getImage());
         rootPane.getRootPane().setDefaultButton(jButton1);
     }
     public LoginFrm(String taiKhoan, String matKhau) {
@@ -111,21 +108,20 @@ public class LoginFrm extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         LoginAcc();
     }//GEN-LAST:event_jButton1ActionPerformed
-   private void LoginAcc()
+    private void LoginAcc()
     {
         try {
             String taiKhoan = jTextField1.getText();
             if(taiKhoan.isEmpty())
-                throw new Exception("Vui lòng nhập tên tài khoản");
+                throw new Exception("Please enter username");
             String matKhau = String.copyValueOf(jPasswordField1.getPassword());
             if(matKhau.isEmpty())
-                throw new Exception("Vui lòng nhập mật khẩu");
+                throw new Exception("Please enter password");
             RunClient.closeAllViews();
-            //RunClient.openView(RunClient.View.WAITINGVERIFY, "Đăng nhập", "Đang xác thực thông tin đăng nhập");
+            RunClient.openView(RunClient.View.WAITINGVERIFY, "Đăng nhập", "Đang xác thực thông tin đăng nhập");
             RunClient.socketHandle.write("client-verify,"+taiKhoan+","+matKhau);            
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(rootPane, ex.getMessage());
@@ -135,7 +131,6 @@ public class LoginFrm extends javax.swing.JFrame {
         RunClient.closeView(RunClient.View.LOGIN);
         RunClient.openView(RunClient.View.REGISTER);
     }//GEN-LAST:event_jButton2ActionPerformed
-
     private void jButton1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButton1KeyPressed
         if (evt.getKeyCode() == 10){
             LoginAcc();
@@ -147,7 +142,6 @@ public class LoginFrm extends javax.swing.JFrame {
     public void log(String message){
         JOptionPane.showMessageDialog(rootPane,"ID của server thread là:"+ message);
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

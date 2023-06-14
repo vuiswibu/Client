@@ -1,32 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package view;
 
 import controller.RunClient;
 import java.awt.Color;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
-/**
- *
- * @author Admin
- */
 public class ChillFrm extends javax.swing.JFrame {
     private boolean isOpenning;
-    /**
-     * Creates new form WaitingRoomFrm
-     */
     public ChillFrm() {
         initComponents();
         this.setTitle("Game Caro Online");
-        //this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setIconImage(new ImageIcon("src/assets/logoicon.png").getImage());
@@ -35,7 +20,7 @@ public class ChillFrm extends javax.swing.JFrame {
         jLabel4.setVisible(false);
     }
     public void setRoomName(String roomName){
-        jLabel1.setText("Phòng "+roomName);
+        jLabel1.setText("Room "+roomName);
     }
     
     public void setRoomPassword(String password){
@@ -45,7 +30,7 @@ public class ChillFrm extends javax.swing.JFrame {
     
     public void showFindedCompetitor(){
         isOpenning = true;
-        jLabel2.setText("Đã tìm thấy đối thủ, đang vào phòng");
+        jLabel2.setText("Player found, joining room");
         jLabel2.setForeground(Color.BLUE);
         jButton2.setVisible(false);
     }

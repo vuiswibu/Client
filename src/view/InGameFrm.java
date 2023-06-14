@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package view;
 
 import controller.RunClient;
@@ -23,10 +19,6 @@ import javax.swing.UIManager;
 import model.User;
 import model.Value;
 
-/**
- *
- * @author boi09
- */
 public class InGameFrm extends javax.swing.JFrame {
 
     private JButton[][] button;
@@ -47,12 +39,9 @@ public class InGameFrm extends javax.swing.JFrame {
     private JButton preButton;
     private int userWin;
     private int competitorWin;
-    
+
     public int numberOfMatch;
     private int steps; 
-    /**
-     * Creates new form InGameFrm
-     */
     public InGameFrm(User competitor,int room_ID, int isStart) {
         initComponents();
 //        try {
@@ -173,7 +162,6 @@ public class InGameFrm extends javax.swing.JFrame {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         try {
-                            //button[a][b].setIcon(new ImageIcon(normalItem[(numberOfMatch % 2)]));
                             button[a][b].setDisabledIcon(new ImageIcon(normalItem[(numberOfMatch % 2)]));
                             matrix[a][b] = 1;
                             steps++;
@@ -184,7 +172,7 @@ public class InGameFrm extends javax.swing.JFrame {
                                     //Xử lý khi người chơi này thắng
                                     increaseWinMatchToUser();
                                     RunClient.socketHandle.write("win,"+a+","+b);
-                                    RunClient.openView(RunClient.View.CHILLROOM,"Bạn đã thắng","Đang thiết lập ván chơi mới");
+                                    RunClient.openView(RunClient.View.CHILLROOM,"You win","Creating a newgame");
 
                                 }
                                 else{
@@ -208,14 +196,12 @@ public class InGameFrm extends javax.swing.JFrame {
                     @Override
                     public void mouseEntered(java.awt.event.MouseEvent evt) {
                         if(button[a][b].isEnabled()) {
-                            //button[a][b].setBackground(Color.GREEN);
                             button[a][b].setIcon(new ImageIcon(normalItem[(numberOfMatch % 2)]));
                         }
                     }
                     @Override
                     public void mouseExited(java.awt.event.MouseEvent evt) {
                         if(button[a][b].isEnabled()){
-                            //button[a][b].setBackground(null);
                             button[a][b].setIcon(new ImageIcon("assets/image/blank.jpg"));
                         }
                     }
@@ -226,11 +212,11 @@ public class InGameFrm extends javax.swing.JFrame {
     public void newgame() {
         
         if (numberOfMatch % 2 == 0) {
-            JOptionPane.showMessageDialog(rootPane, "Đến lượt bạn đi trước");
+            JOptionPane.showMessageDialog(rootPane, "You go first");
             displayUserTurn();
             startTimer();
         } else {
-            JOptionPane.showMessageDialog(rootPane, "Đối thủ đi trước");
+            JOptionPane.showMessageDialog(rootPane, "The opponent go fisrt ");
             displayCompetitorTurn();
         }
         for (int i = 0; i < Value.SIZE; i++) {
@@ -283,11 +269,11 @@ public class InGameFrm extends javax.swing.JFrame {
     }
     public void displayDrawGame(){
         String tmp = jTextArea1.getText();
-        tmp += "--Ván chơi hòa--\n";
+        tmp += "--Draw match--\n";
         jTextArea1.setText(tmp);
     }
     public void displayDrawRefuse(){
-        JOptionPane.showMessageDialog(rootPane, "Đối thủ không chấp nhận hòa, mời bạn chơi tiếp");
+        JOptionPane.showMessageDialog(rootPane, "The opponent does not accept a draw, please continue to play");
         timer.start();
         setEnableButton(true);
     }
@@ -322,16 +308,16 @@ public class InGameFrm extends javax.swing.JFrame {
     public void increaseWinMatchToUser(){
         RunClient.user.setNumberOfwin(RunClient.user.getNumberOfwin()+1);
         userWin++;
-        LabelTiso.setText("Tỉ số: "+userWin+"-"+competitorWin);
+        LabelTiso.setText("Score: "+userWin+"-"+competitorWin);
         JOptionPane.showMessageDialog(rootPane, 
-                        "--Bạn đã thắng, tỉ số hiện tại là "+userWin+"-"+competitorWin+"--");
+                        "--You won, the score is now "+userWin+"-"+competitorWin+"--");
     }
     public void increaseWinMatchToCompetitor(){
         competitor.setNumberOfwin(competitor.getNumberOfwin()+1);
         competitorWin++;
-        LabelTiso.setText("Tỉ số: "+userWin+"-"+competitorWin);
+        LabelTiso.setText("Score: "+userWin+"-"+competitorWin);
         JOptionPane.showMessageDialog(rootPane, 
-                        "--Bạn đã thua, tỉ số hiện tại là "+userWin+"-"+competitorWin+"--");
+                        "--You lose, the score is now "+userWin+"-"+competitorWin+"--");
     }
     public void showDrawRequest() {
         int res = JOptionPane.showConfirmDialog(rootPane, "The opponent wants to draw this game, do you agree?", "Draw request", JOptionPane.YES_NO_OPTION);
@@ -772,7 +758,6 @@ public class InGameFrm extends javax.swing.JFrame {
         }
         return 0;
     }// </editor-fold>   
-    
     public void addCompetitorMove(String x, String y){
         displayUserTurn();
         startTimer();
@@ -805,16 +790,9 @@ public class InGameFrm extends javax.swing.JFrame {
             timer.stop();
             setEnableButton(false);
             increaseWinMatchToCompetitor();
-            RunClient.openView(RunClient.View.CHILLROOM,"Bạn đã thua","Đang thiết lập ván chơi mới");
+            RunClient.openView(RunClient.View.CHILLROOM,"You lose","Creating a new game");
         }
     }
-    
-
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -1128,7 +1106,7 @@ public class InGameFrm extends javax.swing.JFrame {
                     return;
                 }
                 String temp = jTextArea1.getText();
-                temp += "Tôi: " + jTextField1.getText() + "\n";
+                temp += "Me: " + jTextField1.getText() + "\n";
                 jTextArea1.setText(temp);
                 RunClient.socketHandle.write("chat," + jTextField1.getText());
                 jTextField1.setText("");
@@ -1138,15 +1116,12 @@ public class InGameFrm extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_jTextField1KeyPressed
-    
     private void buttonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExitActionPerformed
         exitGame();
     }//GEN-LAST:event_buttonExitActionPerformed
-
     private void avatar2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_avatar2MouseClicked
          RunClient.openView(RunClient.View.COMPETITORINFO, competitor);
     }//GEN-LAST:event_avatar2MouseClicked
-
     private void btnhoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnhoaActionPerformed
         try {
             int res = JOptionPane.showConfirmDialog(rootPane, "Do you really want to draw this game?", "Draw Request", JOptionPane.YES_NO_OPTION);
@@ -1160,9 +1135,6 @@ public class InGameFrm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, ex.getMessage());
         }
     }//GEN-LAST:event_btnhoaActionPerformed
-    
-  
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel IconCompetitor;
     private javax.swing.JLabel IconUser;
