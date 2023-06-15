@@ -515,7 +515,7 @@ public class MainMenuFrm extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
          //Xử lý tạo phòng   
     private void createroom_bttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createroom_bttActionPerformed
-        int res = JOptionPane.showConfirmDialog(rootPane, "Bạn có muốn đặt mật khẩu cho phòng không?", "Tạo phòng", JOptionPane.YES_NO_OPTION);
+        int res = JOptionPane.showConfirmDialog(rootPane, "Do you want to set password for your room?", "Create room", JOptionPane.YES_NO_OPTION);
         if(res==JOptionPane.YES_OPTION){
             RunClient.openView(RunClient.View.CREATEROOMPASSWORD);
         }
