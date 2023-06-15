@@ -245,7 +245,7 @@ public class ProfileFrm extends javax.swing.JFrame {
         avatarComboBox1.setMaximumRowCount(25);
 
         profile_btt.setFont(new java.awt.Font("Roboto", 0, 12)); // NOI18N
-        profile_btt.setText("Refresh");
+        profile_btt.setText("Close");
         profile_btt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 profile_bttActionPerformed(evt);
@@ -336,6 +336,7 @@ public class ProfileFrm extends javax.swing.JFrame {
             RunClient.user.setNickname(nickname);
             //RunClient.openView(RunClient.View.WAITINGVERIFY, "Đang cập nhật", "Đang chờ phản hồi");
             RunClient.socketHandle.write("change_profile,"+iduser+","+nickname+","+avatar);
+            this.dispose();
         }
         catch (SQLException ex) {
             JOptionPane.showMessageDialog(rootPane, ex.getMessage());}
@@ -346,7 +347,6 @@ public class ProfileFrm extends javax.swing.JFrame {
 
     private void profile_bttActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profile_bttActionPerformed
         RunClient.closeView(RunClient.View.PROFILE);
-        RunClient.openView(RunClient.View.PROFILE);
     }//GEN-LAST:event_profile_bttActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed

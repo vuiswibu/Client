@@ -16,21 +16,22 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import javax.swing.UIManager;
+import model.State;
 import model.User;
 import model.Value;
 
 public class InGameFrm extends javax.swing.JFrame {
 
     private JButton[][] button;
+    private State root;
     
     private User competitor;
     
     private Timer timer;
     private Integer second, minute;
     
-    private int[][] competitorMatrix;
-    private int[][] matrix;
-    private int[][] userMatrix;
+    private int xUndo[] = new int[Value.SIZE*Value.SIZE];
+    private int yUndo[] = new int[Value.SIZE*Value.SIZE];
     
     private String normalItem[];
     private String winItem[];
@@ -41,7 +42,6 @@ public class InGameFrm extends javax.swing.JFrame {
     private int competitorWin;
 
     public int numberOfMatch;
-    private int steps; 
     public InGameFrm(User competitor,int room_ID, int isStart) {
         initComponents();
 //        try {
@@ -52,11 +52,10 @@ public class InGameFrm extends javax.swing.JFrame {
 //        }
         this.competitor = competitor;
         numberOfMatch = isStart;
-        System.out.println(numberOfMatch);
+        root = new State();
         //init score
         userWin = 0;
         competitorWin = 0;
-        steps=0;
         
         this.setTitle("Phòng: "+room_ID+" ("+RunClient.user.getUsername()+")");
         this.setResizable(false);
@@ -102,10 +101,6 @@ public class InGameFrm extends javax.swing.JFrame {
 
         });
         
-        //SetUp play Matrix
-        competitorMatrix = new int[Value.SIZE][Value.SIZE];
-        matrix = new int[Value.SIZE][Value.SIZE];
-        userMatrix = new int[Value.SIZE][Value.SIZE];
         //Setup icon (odd for Oicon and even for Xicon)
         normalItem = new String[2];
         normalItem[1] = "src/assets/Oicon1.png";
@@ -163,13 +158,17 @@ public class InGameFrm extends javax.swing.JFrame {
                     public void actionPerformed(ActionEvent e) {
                         try {
                             button[a][b].setDisabledIcon(new ImageIcon(normalItem[(numberOfMatch % 2)]));
-                            matrix[a][b] = 1;
-                            steps++;
-                            userMatrix[a][b] = 1;
+                            xUndo[root.steps] = a;
+                            yUndo[root.steps] = b;                           
+                            root.update(a, b, Value.USER_VALUE);
                             button[a][b].setEnabled(false);
                             try {
-                                if (checkWinner(userMatrix,Value.USER_VALUE)==1) {
+                                if (root.checkWinner(button,Value.USER_VALUE)==1) {
                                     //Xử lý khi người chơi này thắng
+                                    for(JButton jButton: root.getlist()){
+                                        jButton.setIcon(new ImageIcon(winItem[numberOfMatch % 2]));
+                                        jButton.setDisabledIcon(new ImageIcon(winItem[numberOfMatch % 2]));
+                                    }
                                     increaseWinMatchToUser();
                                     RunClient.socketHandle.write("win,"+a+","+b);
                                     RunClient.openView(RunClient.View.CHILLROOM,"You win","Creating a newgame");
@@ -202,7 +201,7 @@ public class InGameFrm extends javax.swing.JFrame {
                     @Override
                     public void mouseExited(java.awt.event.MouseEvent evt) {
                         if(button[a][b].isEnabled()){
-                            button[a][b].setIcon(new ImageIcon("assets/image/blank.jpg"));
+                            button[a][b].setIcon(null);
                         }
                     }
                 });
@@ -224,11 +223,9 @@ public class InGameFrm extends javax.swing.JFrame {
                 button[i][j].setIcon(new ImageIcon("src/assets/new.png"));
                 button[i][j].setDisabledIcon(new ImageIcon("src/assets/new.png"));
                 button[i][j].setText("");
-                competitorMatrix[i][j] = 0;
-                matrix[i][j] = 0;
-                userMatrix[i][j] = 0;
             }
         }
+        root = new State();
         //IF Enemy Turn 
         if(numberOfMatch % 2 != 0){
             setEnableButton(false);
@@ -247,6 +244,7 @@ public class InGameFrm extends javax.swing.JFrame {
     }
     public void displayUserTurn(){
         LabTextTurn.setText("My Turn");
+        btnUndo.setEnabled(false);
         LabelTimer.setVisible(true);
         if(numberOfMatch % 2==0){
             LabTextTurn.setForeground(Color.RED);
@@ -258,6 +256,7 @@ public class InGameFrm extends javax.swing.JFrame {
     }
     public void displayCompetitorTurn() {
         LabTextTurn.setText("Enemy Turn");
+        btnUndo.setEnabled(true);
         LabelTimer.setVisible(false);
         if(not(numberOfMatch % 2)==0){
             LabTextTurn.setForeground(Color.RED);
@@ -277,6 +276,11 @@ public class InGameFrm extends javax.swing.JFrame {
         timer.start();
         setEnableButton(true);
     }
+    public void displayUndoRefuse(){
+        JOptionPane.showMessageDialog(rootPane, "The opponent does not accept undo, please continue to play");
+        timer.start();
+        setEnableButton(true);
+    }
     public void addMessage(String message){
         String temp = jTextArea1.getText();
         temp += competitor.getNickname() + ": " + message+"\n";
@@ -286,8 +290,10 @@ public class InGameFrm extends javax.swing.JFrame {
     public void setEnableButton(boolean b) {
         for (int i = 0; i < Value.SIZE; i++) {
             for (int j = 0; j < Value.SIZE; j++) {
-                if (matrix[i][j] == 0) {
+                if (root.getState()[i][j] == 0) {
                     button[i][j].setEnabled(b);
+                    button[i][j].setIcon(null);
+                    button[i][j].setDisabledIcon(null);
                 }
             }
         }
@@ -338,426 +344,54 @@ public class InGameFrm extends javax.swing.JFrame {
             }
         }
     }
-    public int checkWinner(int[][] Button,int user) {
-        List<JButton> list = new ArrayList<>();
-	int[] lineX = {1, 1, 0, 1};  // |các đường cần kiểm tra(ngang, dọc, chéo xuống trái, chéo xuống phải)
-	int[] lineY = {0, 1, 1, -1}; // |để tìm người thắng
-	for (int x = 0; x < Value.SIZE; x++) {
-            for (int y = 0; y < Value.SIZE; y++) {
-                if(Button[x][y] == 1) { // Nếu ô này đã được player chọn => kiểm tra			
-                    for (int i = 0; i < 4; i++) { // kiểm tra 4 đường
-                        list = new ArrayList<>();
-			int count = 1; // count = 5 => player chiến thắng
-                        list.add(button[x][y]);
-			for(int j = 1; j <= 4; j++) { // kiểm tra 4 ô tiếp theo
-                            int vtx = x + lineX[i]*j; // vị trí x của ô tiếp theo cần check
-                            int vty = y + lineY[i]*j; // vị trí y của ô tiếp theo cần check
-                            // vtx hoặc vty < 0 hoặc > Value.SIZE, hoặc ô này != ô đầu => khỏi ktra
-                            if(vtx < 0 || vty < 0 || vtx >= Value.SIZE || vty >= Value.SIZE) break;
-                            if(Button[vtx][vty] == 1){
-                                list.add(button[vtx][vty]);
-                                count++;
-                            }
-                            else break;
-			}
-			if(count == 5){
-                            if(user==Value.USER_VALUE){ //competitor
-                                for (JButton jButton : list) {
-                                    jButton.setIcon(new ImageIcon(winItem[numberOfMatch % 2]));
-                                    jButton.setDisabledIcon(new ImageIcon(winItem[numberOfMatch % 2]));
-                                }
-                            }
-                            else{ //user
-                                for (JButton jButton : list) {
-                                    jButton.setIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
-                                    jButton.setDisabledIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
-                                }
-                            }
-                            
-                            return 1;
-                        } // Player thắng
-                    }
-		}
+    public void showUndoRequest() {
+        int res = JOptionPane.showConfirmDialog(rootPane, "The opponent wants to undo their move , do you agree?", "Undo request", JOptionPane.YES_NO_OPTION);
+        if (res == JOptionPane.YES_OPTION) {
+            try {
+                timer.stop();
+                setEnableButton(false);
+                RunClient.socketHandle.write("undo-confirm,");
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(rootPane, ex.getMessage());
             }
-	}
-	return 0; // Không ai thắng cả
+        }
+        else{
+            try {
+                RunClient.socketHandle.write("undo-refuse,");
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+            }
+        }
+    }
+    public void undo() {
+	if (root.steps > 0) {
+            button[xUndo[root.steps - 1]][yUndo[root.steps - 1]].setText("");
+            button[xUndo[root.steps - 1]][yUndo[root.steps - 1]].setIcon(null);
+            button[xUndo[root.steps - 1]][yUndo[root.steps - 1]].setDisabledIcon(null);
+            root.updatestate(xUndo[root.steps - 1], yUndo[root.steps - 1]);
+            if(preButton!=null){
+                preButton.setIcon(new ImageIcon(normalItem[not(numberOfMatch % 2)]));
+                preButton.setDisabledIcon(new ImageIcon(normalItem[not(numberOfMatch % 2)]));
+            }
+            preButton = null;
+            if (LabTextTurn.getText().equals("My Turn")){
+                displayCompetitorTurn();
+                timer.stop();         
+                setEnableButton(false);
+
+            } 
+            else {
+                displayUserTurn();
+                startTimer();
+                setEnableButton(true);
+            }
+                
+            root.steps--;
+            if (root.steps == 0)
+		btnUndo.setEnabled(false);
+        }
     }
     
-    // <editor-fold defaultstate="collapsed" desc="Cách check thắng không tối ưu">    
-    // check competitor
-    public int checkHang() {
-        int hang = 0;
-        List<JButton> list = new ArrayList<>();
-        for (int i = 0; i < Value.SIZE; i++) {
-            for (int j = 0; j < Value.SIZE; j++) {
-                if (competitorMatrix[i][j] == 1) {
-                    list.add(button[i][j]);
-                    hang++;
-                    if (hang >= 5){
-                       for (JButton jButton : list) {
-                           jButton.setIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
-                           jButton.setDisabledIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
-                       }
-                       return 1;
-                    }   
-                } else {
-                    hang = 0;
-                    list = new ArrayList<>();
-                }
-            }
-            hang = 0;
-            list = new ArrayList<>();
-        }
-        return 0;
-    }
-
-    public int checkCot() {
-        int cot = 0;
-        List<JButton> list = new ArrayList<>();
-        for (int i = 0; i < Value.SIZE; i++) {
-            for (int j = 0; j < Value.SIZE; j++) {
-                if (competitorMatrix[j][i] == 1) {
-                    list.add(button[j][i]);
-                    cot++;
-                    if (cot >= 5){
-                        for (JButton jButton : list) {
-                            jButton.setIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
-                            jButton.setDisabledIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
-                        }
-                        return 1;
-                    }
-                } else {                   
-                    cot = 0;
-                    list = new ArrayList<>();
-                }                                 
-            }
-            cot = 0;
-            list = new ArrayList<>();
-        }
-        return 0;
-    }
-
-    public int checkCheoTrai() {
-        //vẫn độ phức tạp là n^2 cách này là chia ra 2 nửa mà check
-        /*xx... chéo từ trái qua phải từ trên qua phải
-          .xx..
-          ..ox.
-          ...xx
-          ....x*/
-        int j = 0;
-        List<JButton> list = new ArrayList<>();
-        while (j < Value.SIZE) {
-            int demx = 0;
-            int tamj = j, tami = 0;
-            while (tamj < Value.SIZE) {
-                if (competitorMatrix[tami][tamj] == 1){
-                    list.add(button[tami][tamj]);
-                    demx++;
-                    if (demx >= 5){
-                        for (JButton jButton : list) {
-                            jButton.setIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
-                            jButton.setDisabledIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
-                        }
-                        return 1;
-                    }                  
-                }                
-                else{
-                    demx = 0;
-                    list = new ArrayList<>();
-                }                
-                tamj++;
-                tami++;                
-            }
-            j++;
-        }
-        /*..... chéo từ trái qua phải từ dưới qua phải
-          .....
-          x....
-          .x...
-          ..x..*/
-        int i = 0;
-        list = new ArrayList<>();
-        while (i < Value.SIZE) {
-            int demx = 0;
-            int tami = i, tamj = 0;
-            while (tami < Value.SIZE) {
-                if (competitorMatrix[tami][tamj] == 1){
-                    list.add(button[tami][tamj]);
-                    demx++;
-                    if (demx >= 5){
-                        for (JButton jButton : list) {
-                            jButton.setIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
-                            jButton.setDisabledIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
-                        }
-                        return 1;
-                    }         
-                }                                       
-                else{
-                    list = new ArrayList<>();
-                    demx = 0;
-                }                   
-                tamj++;
-                tami++;               
-            }
-            i++;
-        }
-        return 0;
-    }
-
-    public int checkCheoPhai() {
-        //vẫn độ phức tạp là n^2 cách này là chia ra 2 nửa mà check
-        /*...x. chéo từ phải qua trái từ trên qua trái
-          ..x..
-          .x...
-          x....
-          .....*/
-        List<JButton> list = new ArrayList<>();
-        int j = Value.SIZE - 1;
-        while (j >= 0) {
-            int demx = 0;
-            int tamj = j, tami = 0;
-            while (tamj >= 0) {
-                if (competitorMatrix[tami][tamj] == 1){
-                    list.add(button[tami][tamj]);
-                    demx++;
-                    if (demx >= 5){
-                        for (JButton jButton : list) {
-                            jButton.setIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
-                            jButton.setDisabledIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
-                        }
-                        return 1;
-                    }                    
-                }                   
-                else{
-                    list = new ArrayList<>();
-                    demx = 0;
-                }                  
-                tamj--;
-                tami++;
-                
-            }
-            j--;
-        }
-        /*..... chéo từ phải qua trái từ dưới qua trái
-          .....
-          ....x
-          ...x.
-          ..x..*/
-        int i = 0;
-        list = new ArrayList<>();
-        while (i < Value.SIZE) {
-            int demx = 0;
-            int tami = i, tamj = Value.SIZE - 1;
-            while (tami < Value.SIZE) {
-                if (competitorMatrix[tami][tamj] == 1){
-                    list.add(button[tami][tamj]);
-                    demx++;
-                    if (demx >= 5){
-                        for (JButton jButton : list) {
-                            jButton.setIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
-                            jButton.setDisabledIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
-                        }
-                        return 1;
-                    }                 
-                }                    
-                else{
-                    list = new ArrayList<>();
-                    demx = 0;
-                }                    
-                tamj--;
-                tami++;                
-            }
-            i++;
-        }
-        return 0;
-    }
-    
-    //check user
-    public int checkHangU() {
-        int hang = 0;
-        List<JButton> list = new ArrayList<>();
-        for (int i = 0; i < Value.SIZE; i++) {
-            for (int j = 0; j < Value.SIZE; j++) {
-                if (userMatrix[i][j] == 1) {
-                    list.add(button[i][j]);
-                    hang++;
-                    if (hang >= 5){
-                       for (JButton jButton : list) {
-                           jButton.setIcon(new ImageIcon(winItem[numberOfMatch % 2]));
-                           jButton.setDisabledIcon(new ImageIcon(winItem[numberOfMatch % 2]));
-                       }
-                       return 1;
-                    }   
-                } else {
-                    hang = 0;
-                    list = new ArrayList<>();
-                }
-            }
-            hang = 0;
-            list = new ArrayList<>();
-        }
-        return 0;
-    }
-
-    public int checkCotU() {
-        int cot = 0;
-        List<JButton> list = new ArrayList<>();
-        for (int i = 0; i < Value.SIZE; i++) {
-            for (int j = 0; j < Value.SIZE; j++) {
-                if (userMatrix[j][i] == 1) {
-                    list.add(button[j][i]);
-                    cot++;
-                    if (cot >= 5){
-                        for (JButton jButton : list) {
-                            jButton.setIcon(new ImageIcon(winItem[numberOfMatch % 2]));
-                            jButton.setDisabledIcon(new ImageIcon(winItem[numberOfMatch % 2]));
-                        }
-                        return 1;
-                    }
-                } else {                   
-                    cot = 0;
-                    list = new ArrayList<>();
-                }                                 
-            }
-            cot = 0;
-            list = new ArrayList<>();
-        }
-        return 0;
-    }
-
-    public int checkCheoTraiU() {
-        //vẫn độ phức tạp là n^2 cách này là chia ra 2 nửa mà check
-        /*xx... chéo từ trái qua phải từ trên qua phải
-          .xx..
-          ..ox.
-          ...xx
-          ....x*/
-        int j = 0;
-        List<JButton> list = new ArrayList<>();
-        while (j < Value.SIZE) {
-            int demx = 0;
-            int tamj = j, tami = 0;
-            while (tamj < Value.SIZE) {
-                if (userMatrix[tami][tamj] == 1){
-                    list.add(button[tami][tamj]);
-                    demx++;
-                    if (demx >= 5){
-                        for (JButton jButton : list) {
-                            jButton.setIcon(new ImageIcon(winItem[numberOfMatch % 2]));
-                            jButton.setDisabledIcon(new ImageIcon(winItem[numberOfMatch % 2]));
-                        }
-                        return 1;
-                    }                  
-                }                
-                else{
-                    demx = 0;
-                    list = new ArrayList<>();
-                }                
-                tamj++;
-                tami++;                
-            }
-            j++;
-        }
-        /*..... chéo từ trái qua phải từ dưới qua phải
-          .....
-          x....
-          .x...
-          ..x..*/
-        int i = 0;
-        list = new ArrayList<>();
-        while (i < Value.SIZE) {
-            int demx = 0;
-            int tami = i, tamj = 0;
-            while (tami < Value.SIZE) {
-                if (userMatrix[tami][tamj] == 1){
-                    list.add(button[tami][tamj]);
-                    demx++;
-                    if (demx >= 5){
-                        for (JButton jButton : list) {
-                            jButton.setIcon(new ImageIcon(winItem[numberOfMatch % 2]));
-                            jButton.setDisabledIcon(new ImageIcon(winItem[numberOfMatch % 2]));
-                        }
-                        return 1;
-                    }         
-                }                                       
-                else{
-                    list = new ArrayList<>();
-                    demx = 0;
-                }                   
-                tamj++;
-                tami++;               
-            }
-            i++;
-        }
-        return 0;
-    }
-
-    public int checkCheoPhaiU() {
-        //vẫn độ phức tạp là n^2 cách này là chia ra 2 nửa mà check
-        /*...x. chéo từ phải qua trái từ trên qua trái
-          ..x..
-          .x...
-          x....
-          .....*/
-        List<JButton> list = new ArrayList<>();
-        int j = Value.SIZE - 1;
-        while (j >= 0) {
-            int demx = 0;
-            int tamj = j, tami = 0;
-            while (tamj >= 0) {
-                if (userMatrix[tami][tamj] == 1){
-                    list.add(button[tami][tamj]);
-                    demx++;
-                    if (demx >= 5){
-                        for (JButton jButton : list) {
-                            jButton.setIcon(new ImageIcon(winItem[numberOfMatch % 2]));
-                            jButton.setDisabledIcon(new ImageIcon(winItem[numberOfMatch % 2]));
-                        }
-                        return 1;
-                    }                    
-                }                   
-                else{
-                    list = new ArrayList<>();
-                    demx = 0;
-                }                  
-                tamj--;
-                tami++;
-                
-            }
-            j--;
-        }
-        /*..... chéo từ phải qua trái từ dưới qua trái
-          .....
-          ....x
-          ...x.
-          ..x..*/
-        int i = 0;
-        list = new ArrayList<>();
-        while (i < Value.SIZE) {
-            int demx = 0;
-            int tami = i, tamj = Value.SIZE - 1;
-            while (tami < Value.SIZE) {
-                if (userMatrix[tami][tamj] == 1){
-                    demx++;
-                    if (demx >= 5){
-                        for (JButton jButton : list) {
-                            jButton.setIcon(new ImageIcon(winItem[numberOfMatch % 2]));
-                            jButton.setDisabledIcon(new ImageIcon(winItem[numberOfMatch % 2]));
-                        }
-                        return 1;
-                    }                 
-                }                    
-                else{
-                    list = new ArrayList<>();
-                    demx = 0;
-                }                    
-                tamj--;
-                tami++;                
-            }
-            i++;
-        }
-        return 0;
-    }// </editor-fold>   
     public void addCompetitorMove(String x, String y){
         displayUserTurn();
         startTimer();
@@ -767,13 +401,12 @@ public class InGameFrm extends javax.swing.JFrame {
     
     
     public void caro(String x, String y) {
-        int xx, yy;
-        xx = Integer.parseInt(x);
-        yy = Integer.parseInt(y);
+        int xx = Integer.parseInt(x);
+        int yy = Integer.parseInt(y);
         // danh dau vi tri danh
-        competitorMatrix[xx][yy] = 1;
-        matrix[xx][yy] = 1;
-        steps++;
+        xUndo[root.steps] = xx;
+        yUndo[root.steps] = yy;   
+        root.update(xx, yy, Value.COMPETITOR_VALUE);
         button[xx][yy].setEnabled(false);
         //playSound1();
         //Set bình thường về như cũ
@@ -786,7 +419,11 @@ public class InGameFrm extends javax.swing.JFrame {
         //set button preitem
         button[xx][yy].setIcon(new ImageIcon(preItem[not(numberOfMatch % 2)]));
         button[xx][yy].setDisabledIcon(new ImageIcon(preItem[not(numberOfMatch % 2)]));
-        if(checkWinner(competitorMatrix,Value.COMPETITOR_VALUE)==1){
+        if(root.checkWinner(button,Value.COMPETITOR_VALUE)==1){
+            for(JButton jButton: root.getlist()){
+                jButton.setIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
+                jButton.setDisabledIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
+            }
             timer.stop();
             setEnableButton(false);
             increaseWinMatchToCompetitor();
@@ -809,7 +446,7 @@ public class InGameFrm extends javax.swing.JFrame {
         NameCompetitor = new javax.swing.JLabel();
         LabelTiso = new javax.swing.JLabel();
         Pchucnang = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
+        btnUndo = new javax.swing.JButton();
         btnhoa = new javax.swing.JButton();
         buttonExit = new javax.swing.JButton();
         Pthoigian = new javax.swing.JPanel();
@@ -929,7 +566,12 @@ public class InGameFrm extends javax.swing.JFrame {
 
         Pchucnang.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jButton2.setText("Undo");
+        btnUndo.setText("Undo");
+        btnUndo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUndoActionPerformed(evt);
+            }
+        });
 
         btnhoa.setText("Draw request");
         btnhoa.addActionListener(new java.awt.event.ActionListener() {
@@ -953,7 +595,7 @@ public class InGameFrm extends javax.swing.JFrame {
                 .addGap(46, 46, 46)
                 .addComponent(btnhoa, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnUndo, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(40, 40, 40))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PchucnangLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -965,7 +607,7 @@ public class InGameFrm extends javax.swing.JFrame {
             .addGroup(PchucnangLayout.createSequentialGroup()
                 .addContainerGap(16, Short.MAX_VALUE)
                 .addGroup(PchucnangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnUndo, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnhoa, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(buttonExit, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1135,6 +777,21 @@ public class InGameFrm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, ex.getMessage());
         }
     }//GEN-LAST:event_btnhoaActionPerformed
+
+    private void btnUndoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUndoActionPerformed
+         try {
+            int res = JOptionPane.showConfirmDialog(rootPane, "Would you like to request an undo?", "Undo Request", JOptionPane.YES_NO_OPTION);
+            if (res == JOptionPane.YES_OPTION) {
+                RunClient.socketHandle.write("undo-request,");
+                timer.stop();
+                setEnableButton(false);
+                RunClient.openView(RunClient.View.WAITINGVERIFY, "Undo Request", "Chill man wait for the opponent's response ");
+            }
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+        }
+    }//GEN-LAST:event_btnUndoActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel IconCompetitor;
     private javax.swing.JLabel IconUser;
@@ -1151,10 +808,10 @@ public class InGameFrm extends javax.swing.JFrame {
     private javax.swing.JPanel Pthoigian;
     private javax.swing.JLabel avatar1;
     private javax.swing.JLabel avatar2;
+    private javax.swing.JButton btnUndo;
     private javax.swing.JButton btnhoa;
     private javax.swing.JButton buttonExit;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;

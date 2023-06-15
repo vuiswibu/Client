@@ -218,6 +218,18 @@ public class SocketHandler implements Runnable{
                     RunClient.closeView(RunClient.View.WAITINGVERIFY);
                     RunClient.ingameFrm.newgame();
                 }
+                if(messageSplit[0].equals("undo-request")){
+                    RunClient.ingameFrm.showUndoRequest();
+                }
+                if(messageSplit[0].equals("undo-refuse")){
+                    if(RunClient.waitingFrm!=null) 
+                        RunClient.closeView(RunClient.View.WAITINGVERIFY);
+                    RunClient.ingameFrm.displayUndoRefuse();
+                }
+                if(messageSplit[0].equals("undo-game")){
+                    RunClient.closeView(RunClient.View.WAITINGVERIFY);
+                    RunClient.ingameFrm.undo();
+                }
                 
                 if(messageSplit[0].equals("banned-notice")){
                     RunClient.socketHandle.write("offline,"+RunClient.user.getID());
