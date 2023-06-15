@@ -55,20 +55,20 @@ public class SocketHandler implements Runnable{
                     System.out.println("Đã đăng nhập");
                     RunClient.closeView(RunClient.View.WAITINGVERIFY);
                     RunClient.openView(RunClient.View.LOGIN,messageSplit[1],messageSplit[2]);
-                    RunClient.loginFrm.showError("Tài khoản đã đăng nhập ở nơi khác");
+                    RunClient.loginFrm.showError("Your account is currently being accessed from another location.");
                 }
                 //Mật khẩu không đúng
                 if(messageSplit[0].equals("duppassword")){
                     System.out.println("Mật khẩu không đúng");
                     RunClient.closeView(RunClient.View.WAITINGVERIFY);
                     RunClient.openView(RunClient.View.CPASS,messageSplit[1],messageSplit[2]);
-                    RunClient.changepassFrm.showError("Mật khẩu không chính xác");
+                    RunClient.changepassFrm.showError("Wrong password");
                 }
                 //Xử lý register trùng tên
                 if(messageSplit[0].equals("duplicate-username")){
                     RunClient.closeAllViews();
                     RunClient.openView(RunClient.View.REGISTER);
-                    JOptionPane.showMessageDialog(RunClient.registeruserFrm, "Tên tài khoản đã được người khác sử dụng");
+                    JOptionPane.showMessageDialog(RunClient.registeruserFrm, "The username is already in use by someone else.");
                 }
                 //Xử lý nhận thông tin, chat từ toàn server
                 if(messageSplit[0].equals("chat-server")){
@@ -80,14 +80,14 @@ public class SocketHandler implements Runnable{
                 if(messageSplit[0].equals("banned-user")){
                     RunClient.closeView(RunClient.View.WAITINGVERIFY);
                     RunClient.openView(RunClient.View.LOGIN,messageSplit[1],messageSplit[2]);
-                    RunClient.loginFrm.showError("Tài khoản đã bị ban");
+                    RunClient.loginFrm.showError("Account have been banned");
                 }
                 //Đăng nhập sai mật khẩu hoặc tên đăng nhập
                  if(messageSplit[0].equals("wrong-user")){
                     System.out.println("Thông tin sai");
                     RunClient.closeView(RunClient.View.WAITINGVERIFY);
                     RunClient.openView(RunClient.View.LOGIN,messageSplit[1],messageSplit[2]);
-                    RunClient.loginFrm.showError("Tài khoản hoặc mật khẩu không chính xác");
+                    RunClient.loginFrm.showError("Wrong username or password");
                 }
                 if(messageSplit[0].equals("return-get-rank-charts")){
                     if(RunClient.rankFrm!=null){
@@ -181,7 +181,7 @@ public class SocketHandler implements Runnable{
                 if(messageSplit[0].equals("left-room")){
                     //RunClient.gameClientFrm.stopTimer();
                     RunClient.closeAllViews();
-                    RunClient.openView(RunClient.View.WAITINGVERIFY,"Đối thủ đã thoát khỏi phòng","Đang trở về trang chủ");
+                    RunClient.openView(RunClient.View.WAITINGVERIFY,"The opponent have quit","Return to mainmenu");
                     Thread.sleep(3000);       
                     RunClient.closeAllViews();
                     RunClient.openView(RunClient.View.HOME);
@@ -211,7 +211,7 @@ public class SocketHandler implements Runnable{
                 }
                 if(messageSplit[0].equals("draw-game")){
                     RunClient.closeView(RunClient.View.WAITINGVERIFY);
-                    RunClient.openView(RunClient.View.WAITINGVERIFY, "Ván chơi hòa", "Ván chơi mới dang được thiết lập");
+                    RunClient.openView(RunClient.View.WAITINGVERIFY, "Draw", "A new game being setup");
                     RunClient.ingameFrm.displayDrawGame();
                     Thread.sleep(4000);
                     RunClient.ingameFrm.updateNumberOfGame();
@@ -235,11 +235,11 @@ public class SocketHandler implements Runnable{
                     RunClient.socketHandle.write("offline,"+RunClient.user.getID());
                     RunClient.closeAllViews();
                     RunClient.openView(RunClient.View.LOGIN);
-                    JOptionPane.showMessageDialog(RunClient.loginFrm, messageSplit[1], "Bạn đã bị BAN", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(RunClient.loginFrm, messageSplit[1], "you have been banned", JOptionPane.WARNING_MESSAGE);
                 }
                 //Xử lý cảnh cáo
                 if(messageSplit[0].equals("warning-notice")){
-                    JOptionPane.showMessageDialog(null, messageSplit[1] , "Bạn nhận được một cảnh cáo", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(null, messageSplit[1] , "warnning", JOptionPane.WARNING_MESSAGE);
                 }
             }
         } catch (UnknownHostException e) {
