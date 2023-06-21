@@ -25,7 +25,7 @@ public class SocketHandler implements Runnable{
 
         try {
             // Gửi yêu cầu kết nối tới Server đang lắng nghe
-            socketOfClient = new Socket("192.168.50.37", 7777);
+            socketOfClient = new Socket("127.0.0.1", 7777);
             System.out.println("Kết nối thành công!");
             // Tạo luồng đầu ra tại client (Gửi dữ liệu tới server)
             os = new BufferedWriter(new OutputStreamWriter(socketOfClient.getOutputStream()));
@@ -149,8 +149,7 @@ public class SocketHandler implements Runnable{
                     int isStart = Integer.parseInt(messageSplit[2]);
                     User competitor = getUserFromString(3, messageSplit);
                     if(RunClient.chillFrm!=null){
-                        RunClient.chillFrm.showFindedCompetitor();
-                        
+                        RunClient.chillFrm.showFindedCompetitor();                        
                         try {
                             Thread.sleep(3000);
                         } catch (InterruptedException ex) {
@@ -210,7 +209,7 @@ public class SocketHandler implements Runnable{
                     RunClient.ingameFrm.displayDrawRefuse();
                 }
                 if(messageSplit[0].equals("draw-game")){
-                    RunClient.closeView(RunClient.View.WAITINGVERIFY);
+                    if(RunClient.waitingFrm!=null) RunClient.closeView(RunClient.View.WAITINGVERIFY);
                     RunClient.openView(RunClient.View.WAITINGVERIFY, "Draw", "A new game being setup");
                     RunClient.ingameFrm.displayDrawGame();
                     Thread.sleep(4000);

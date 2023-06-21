@@ -11,6 +11,8 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -163,7 +165,10 @@ public class InGameFrm extends javax.swing.JFrame {
                             root.update(a, b, Value.USER_VALUE);
                             button[a][b].setEnabled(false);
                             try {
-                                if (root.checkWinner(button,Value.USER_VALUE)==1) {
+                                if(root.isOver()){
+                                    RunClient.socketHandle.write("draw-confirm,");
+                                }
+                                else if (root.checkWinner(button,Value.USER_VALUE)==1) {
                                     //Xử lý khi người chơi này thắng
                                     for(JButton jButton: root.getlist()){
                                         jButton.setIcon(new ImageIcon(winItem[numberOfMatch % 2]));
@@ -172,14 +177,13 @@ public class InGameFrm extends javax.swing.JFrame {
                                     increaseWinMatchToUser();
                                     RunClient.socketHandle.write("win,"+a+","+b);
                                     RunClient.openView(RunClient.View.CHILLROOM,"You win","Creating a newgame");
-
+                                    timer.stop();
                                 }
                                 else{
                                     RunClient.socketHandle.write("caro," + a + "," + b);
                                     displayCompetitorTurn();
-                                    
+                                    timer.stop();
                                 }
-                                timer.stop();
                             } catch (Exception ie) {
                                 ie.printStackTrace();
                             }
@@ -244,7 +248,7 @@ public class InGameFrm extends javax.swing.JFrame {
     }
     public void displayUserTurn(){
         LabTextTurn.setText("My Turn");
-        btnUndo.setEnabled(false);
+//        btnUndo.setEnabled(false);
         LabelTimer.setVisible(true);
         if(numberOfMatch % 2==0){
             LabTextTurn.setForeground(Color.RED);
@@ -256,7 +260,7 @@ public class InGameFrm extends javax.swing.JFrame {
     }
     public void displayCompetitorTurn() {
         LabTextTurn.setText("Enemy Turn");
-        btnUndo.setEnabled(true);
+//        btnUndo.setEnabled(true);
         LabelTimer.setVisible(false);
         if(not(numberOfMatch % 2)==0){
             LabTextTurn.setForeground(Color.RED);
@@ -387,8 +391,8 @@ public class InGameFrm extends javax.swing.JFrame {
             }
                 
             root.steps--;
-            if (root.steps == 0)
-		btnUndo.setEnabled(false);
+//            if (root.steps == 0)
+//		btnUndo.setEnabled(false);
         }
     }
     
@@ -419,7 +423,14 @@ public class InGameFrm extends javax.swing.JFrame {
         //set button preitem
         button[xx][yy].setIcon(new ImageIcon(preItem[not(numberOfMatch % 2)]));
         button[xx][yy].setDisabledIcon(new ImageIcon(preItem[not(numberOfMatch % 2)]));
-        if(root.checkWinner(button,Value.COMPETITOR_VALUE)==1){
+        if(root.isOver()){
+            try {
+                RunClient.socketHandle.write("draw-confirm,");
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        else if(root.checkWinner(button,Value.COMPETITOR_VALUE)==1){
             for(JButton jButton: root.getlist()){
                 jButton.setIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));
                 jButton.setDisabledIcon(new ImageIcon(winItem[not(numberOfMatch % 2)]));

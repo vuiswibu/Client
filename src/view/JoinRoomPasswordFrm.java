@@ -113,6 +113,7 @@ public class JoinRoomPasswordFrm extends javax.swing.JFrame {
             String password = jTextField1.getText();
             if(!password.equals(this.password))
                 throw new Exception("Wrong password");
+            JOptionPane.showMessageDialog(rootPane, "Entering room...Just wait in 3 seconds");
             RunClient.socketHandle.write("join-room,"+this.room);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(rootPane, ex.getMessage());

@@ -70,13 +70,13 @@ public class FriendFrm extends javax.swing.JFrame {
         ImageIcon icon;
         for(User friend : listFriend){
             if(!friend.isIsOnline()){
-                icon = new ImageIcon("src/assets/offline.png");
+                icon = new ImageIcon("src/assets/noti_red_dot.png");
             }
             else if(friend.isIsPlaying()){
-                icon = new ImageIcon("src/assets/swords-mini.png");
+                icon = new ImageIcon("src/assets/double_swords_24px.png");
             }
             else{
-                icon = new ImageIcon("src/assets/swords-1-mini.png");
+                icon = new ImageIcon("src/assets/noti_green_dot.png");
             }
             defaultTableModel.addRow(new Object[]{
                 friend.getID(),
